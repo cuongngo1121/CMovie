@@ -39,10 +39,17 @@
               <!-- Ambient Light Effect -->
               <div class="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-orange-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
               
-              <!-- Video Iframe -->
+              <!-- Video Player (Artplayer) -->
+              <VideoPlayer
+                v-if="videoUrl && isM3U8"
+                :option="playerOptions"
+                class="w-full h-full z-20 relative rounded-xl overflow-hidden"
+              />
+              
+              <!-- Fallback Iframe -->
               <iframe
-                v-if="currentEpisodeLink"
-                :src="currentEpisodeLink"
+                v-else-if="videoUrl"
+                :src="videoUrl"
                 allowfullscreen
                 class="w-full h-full z-20 relative"
                 frameborder="0"
@@ -252,6 +259,7 @@ import { onMounted, computed, ref, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useMovieStore } from '../stores/movieStore';
 import NavBar from '../components/NavBar.vue';
+import VideoPlayer from '../components/VideoPlayer.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -271,10 +279,51 @@ onMounted(async () => {
 
 const movie = computed(() => movieStore.movieDetail?.data?.item || null);
 
-const currentEpisodeLink = computed(() => {
-  if (!movie.value?.episodes?.[0]?.server_data) return '';
-  return movie.value.episodes[0].server_data[currentEpisode.value]?.link_embed || '';
+const currentEpisodeData = computed(() => {
+  return movie.value?.episodes?.[0]?.server_data[currentEpisode.value];
 });
+
+const videoUrl = computed(() => {
+  // Prioritize m3u8 for Artplayer, fallback to embed for iframe
+  return currentEpisodeData.value?.link_m3u8 || currentEpisodeData.value?.link_embed || '';
+});
+
+const isM3U8 = computed(() => {
+  return videoUrl.value?.includes('.m3u8');
+});
+
+const playerOptions = computed(() => ({
+  url: videoUrl.value,
+  poster: movie.value?.poster_url || movie.value?.thumb_url,
+  title: `${movie.value?.name} - Tập ${currentEpisodeData.value?.name}`,
+  volume: 0.7,
+  isLive: false,
+  muted: false,
+  autoplay: true,
+  pip: true,
+  autoSize: false,
+  autoMini: true,
+  screenshot: true,
+  setting: true,
+  loop: false,
+  flip: true,
+  playbackRate: true,
+  aspectRatio: true,
+  fullscreen: true,
+  fullscreenWeb: true,
+  subtitleOffset: true,
+  miniProgressBar: true,
+  mutex: true,
+  backdrop: true,
+  playsInline: true,
+  autoPlayback: true,
+  airplay: true,
+  theme: '#F59E0B',
+  lang: 'vi',
+  icons: {
+    loading: '<img src="/loading.svg" width="50">'
+  }
+}));
 
 function goBackToDetail() {
   if (movie.value?.slug) {
