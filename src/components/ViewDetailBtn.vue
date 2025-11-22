@@ -69,7 +69,7 @@ defineProps({
   width: 45px;
   height: 45px;
   border-radius: 8px;
-  background-color: red;
+  background-color: #F59E0B;
   right: 8px;
   transition: linear 0.25s;
 }

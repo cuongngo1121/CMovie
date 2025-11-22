@@ -8,8 +8,6 @@ import Series from "../views/Series.vue";
 import MovieWatch from "../views/MovieWatch.vue";
 import Animation from "../views/Animation.vue";
 
-
-
 const routes = [
     {
         path: "/",
@@ -47,11 +45,35 @@ const routes = [
         component: Animation,
     },
     {
+        path: "/new-movies",
+        name: "NewMovies",
+        component: () => import("../views/NewMovies.vue"),
+    },
+    {
+        path: "/category/:slug",
+        name: "CategoryView",
+        component: () => import("../views/CategoryView.vue"),
+    },
+    {
+        path: "/genre/:slug",
+        name: "GenreView",
+        component: () => import("../views/GenreWrapper.vue"),
+    },
+    {
+        path: "/country/:slug",
+        name: "CountryView",
+        component: () => import("../views/CountryWrapper.vue"),
+    },
+    {
         path: "/watch/:slug",
         name: "MovieWatch",
         component: MovieWatch,
     },
-
+    {
+        path: "/tim-kiem",
+        name: "SearchResults",
+        component: () => import("../views/SearchResults.vue"),
+    },
 ]
 
 const router = createRouter({

@@ -73,7 +73,8 @@
           >
             <span>{{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
-                 :class="['w-4 h-4 transition-transform duration-300', isExpanded ? 'rotate-180' : '']">
+                 :class="['w-4 h-4 transition-transform duration-300', isExpanded ? 'rotate-180' : '']"
+            >
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
             </svg>
           </button>
@@ -243,6 +244,7 @@ import { useMovieStore } from '../stores/movieStore';
 import { useRouter } from 'vue-router';
 import NavBar from '../components/NavBar.vue';
 
+const props = defineProps(['initialSlug']);
 const router = useRouter();
 const movieStore = useMovieStore();
 
@@ -286,9 +288,24 @@ const categories = ref([
 
 const selectedCategory = ref(categories.value[0]); // Default to first category
 
+// Watch for prop changes
+watch(() => props.initialSlug, (newSlug) => {
+  if (newSlug) {
+    const category = categories.value.find(c => c.slug === newSlug);
+    if (category) {
+      selectedCategory.value = category;
+      currentPage.value = 1;
+      isExpanded.value = false;
+      loadAllMoviesForCategory(category.slug);
+    }
+  }
+}, { immediate: true });
+
 // Load movies when component mounts
 onMounted(async () => {
-  await loadAllMoviesForCategory(selectedCategory.value.slug);
+  if (!props.initialSlug) {
+    await loadAllMoviesForCategory(selectedCategory.value.slug);
+  }
 });
 
 // Close dropdown when clicking outside

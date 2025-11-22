@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Logo & Description -->
       <div>
-        <h3 class="text-xl font-bold mb-2">🎬 MovieZone</h3>
+        <h3 class="text-xl font-bold mb-2">🎬 Phim Chùa Premium</h3>
         <p class="text-sm text-gray-400">
           Nơi cập nhật phim mới nhất, nhanh nhất và chất lượng cao. Cùng khám phá thế giới điện ảnh!
         </p>
@@ -52,7 +52,7 @@
 
       </div>
     </div>
-    <p class="text-center text-sm text-gray-500 mt-10">© 2025 MovieZone. All rights reserved.</p>
+    <p class="text-center text-sm text-gray-500 mt-10">© 2025 Phim Chùa Premium. All rights reserved.</p>
   </footer>
 </template>
 

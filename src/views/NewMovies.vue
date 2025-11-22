@@ -2,30 +2,26 @@
   <div class="min-h-screen bg-primary-dark">
     <NavBar />
     
-    <!-- Header Section -->
     <div class="pt-20 pb-8 px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto">
         <div class="text-center mb-8">
           <h1 class="text-3xl md:text-5xl font-bold text-primary mb-4">
-            Phim Hoạt Hình
+            Phim Mới Cập Nhật
           </h1>
-          <p class="text-text-muted text-lg">Khám phá bộ sưu tập phim hoạt hình hấp dẫn</p>
+          <p class="text-text-muted text-lg">Những bộ phim mới nhất vừa được cập nhật</p>
         </div>
 
-        <!-- Filters -->
         <MovieFilters 
           v-model="filters"
           @filter-change="applyFilters"
         />
 
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-20">
           <div class="relative">
             <div class="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
 
-        <!-- Movies Grid with MovieCard Component -->
         <div v-else-if="filteredMovies.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
           <MovieCard 
             v-for="movie in paginatedMovies" 
@@ -35,7 +31,6 @@
           />
         </div>
 
-        <!-- Empty State -->
         <div v-else class="text-center py-20">
           <div class="w-24 h-24 mx-auto mb-6 bg-bg-elevated rounded-full flex items-center justify-center">
             <svg class="w-12 h-12 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,7 +41,6 @@
           <p class="text-text-muted">Thử thay đổi bộ lọc để xem thêm phim</p>
         </div>
 
-        <!-- Pagination -->
         <div v-if="totalPages > 1" class="flex justify-center mt-12">
           <div class="flex items-center space-x-2 bg-bg-card rounded-xl p-2 border border-border">
             <button 
@@ -87,7 +81,6 @@
           </div>
         </div>
 
-        <!-- Page Info -->
         <div v-if="filteredMovies.length > 0" class="text-center mt-4 text-text-muted text-sm">
           Trang {{ currentPage }} / {{ totalPages }}
           <span class="mx-2">•</span>
@@ -109,7 +102,6 @@ import MovieFilters from '../components/MovieFilters.vue'
 const router = useRouter()
 const movieStore = useMovieStore()
 
-const category = 'hoat-hinh'
 const loading = ref(false)
 const currentPage = ref(1)
 const itemsPerPage = 24
@@ -126,8 +118,8 @@ const movies = ref([])
 onMounted(async () => {
   loading.value = true
   try {
-    await movieStore.getMoviesByCategory(category)
-    movies.value = movieStore.moviesByCategory[category]?.items || []
+    const response = await movieStore.getRecentlyUpdated()
+    movies.value = response || []
   } finally {
     loading.value = false
   }
@@ -136,12 +128,10 @@ onMounted(async () => {
 const filteredMovies = computed(() => {
   let result = [...movies.value]
   
-  // Filter by year
   if (filters.year) {
     result = result.filter(m => m.year === filters.year || m.year === parseInt(filters.year))
   }
   
-  // Filter by country
   if (filters.country) {
     result = result.filter(m => {
       const countries = Array.isArray(m.country) ? m.country : []
@@ -152,7 +142,6 @@ const filteredMovies = computed(() => {
     })
   }
   
-  // Filter by genre
   if (filters.genre) {
     result = result.filter(m => {
       const categories = Array.isArray(m.category) ? m.category : []
@@ -163,13 +152,11 @@ const filteredMovies = computed(() => {
     })
   }
   
-  // Sort
   if (filters.sort === 'year') {
     result.sort((a, b) => (b.year || 0) - (a.year || 0))
   } else if (filters.sort === 'name') {
     result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
   }
-  // 'latest' is already sorted by API
   
   return result
 })
@@ -183,7 +170,7 @@ const paginatedMovies = computed(() => {
 })
 
 function applyFilters() {
-  currentPage.value = 1  // Reset to first page
+  currentPage.value = 1
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
@@ -224,6 +211,3 @@ function goToMovieDetails(movie) {
   router.push({ path: `/movie/${movie.slug}` })
 }
 </script>
-
-<style scoped>
-</style>
