@@ -34,9 +34,20 @@
         </router-link>
       </div>
 
-      <!-- Grid Layout -->
-      <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div v-for="n in 6" :key="n" class="bg-gray-800/50 backdrop-blur-sm rounded-2xl h-48 animate-pulse"></div>
+      <!-- Skeleton Loading State -->
+      <div v-if="loading" class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-pulse">
+        <!-- Featured Skeleton -->
+        <div class="lg:col-span-2 aspect-video bg-gray-800/50 rounded-3xl"></div>
+        <!-- List Skeleton -->
+        <div class="flex flex-col gap-4">
+          <div v-for="n in 4" :key="n" class="flex gap-4 p-3 rounded-xl bg-gray-800/30 border border-white/5">
+            <div class="w-24 aspect-[2/3] bg-gray-700 rounded-lg"></div>
+            <div class="flex-1 py-2 space-y-2">
+              <div class="h-4 bg-gray-700 rounded w-3/4"></div>
+              <div class="h-3 bg-gray-700 rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8">

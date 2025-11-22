@@ -4,476 +4,296 @@ import axiosClient from '../api/axiosClient'
 
 export const useMovieStore = defineStore('movie', {
     state: () => ({
-        movies: [], // sẽ chứa mảng items
-        moviesByCategory: {}, // sẽ chứa mảng items theo thể loại với cấu trúc mới: { category: { allMovies: [], items: [], params: {} } }
-        searchResults: [], // kết quả tìm kiếm
-        searchCache: {}, // cache tìm kiếm để tránh gọi API lặp lại
+        movies: [], // Home page movies
+        moviesByCategory: {}, // { [category]: { allMovies: [], items: [], params: {} } }
+        moviesByCountry: {}, // { [country]: { allMovies: [], data: {} } }
+        searchResults: [],
+        searchCache: {},
         loading: false,
         searchLoading: false,
         movieDetail: null,
-        moviesByCountry: {}, // { country: { allMovies: [], data: {...} } }
     }),
 
     getters: {
-        // Getter để lấy kết quả tìm kiếm đã cache
+        // Cached search results
         getCachedSearchResults: (state) => (keyword) => {
             return state.searchCache[keyword.toLowerCase()] || null
         },
-
-        // Getter để kiểm tra có đang loading không
+        // Global loading flag
         isLoading: (state) => state.loading || state.searchLoading,
-
-        // Get all movies for a specific country
-        getAllMoviesForCountry: (state) => (country) => {
-            return state.moviesByCountry[country]?.allMovies || []
-        },
-
-        // Get movie count for a specific country
-        getMovieCountForCountry: (state) => (country) => {
-            return state.moviesByCountry[country]?.allMovies?.length || 0
-        },
-
-        // Get all movies for a specific category
-        getAllMoviesForCategory: (state) => (category) => {
-            return state.moviesByCategory[category]?.allMovies || []
-        },
-
-        // Get movie count for a specific category
-        getMovieCountForCategory: (state) => (category) => {
-            return state.moviesByCategory[category]?.allMovies?.length || 0
-        }
+        // Country helpers
+        getAllMoviesForCountry: (state) => (country) => state.moviesByCountry[country]?.allMovies || [],
+        getMovieCountForCountry: (state) => (country) => state.moviesByCountry[country]?.allMovies?.length || 0,
+        // Category helpers
+        getAllMoviesForCategory: (state) => (category) => state.moviesByCategory[category]?.allMovies || [],
+        getMovieCountForCategory: (state) => (category) => state.moviesByCategory[category]?.allMovies?.length || 0,
     },
 
     actions: {
+        /** Home page movies */
         async getNewMovies() {
             this.loading = true
             try {
                 const res = await axiosClient.get('v1/api/home')
-                console.log('✅ API response:', res.data)
                 this.movies = res.data
-            } catch (error) {
-                console.error('❌ Lỗi khi lấy danh sách phim:', error)
+                console.log('✅ Home movies loaded')
+            } catch (e) {
+                console.error('❌ Failed to load home movies', e)
             } finally {
                 this.loading = false
             }
         },
 
-        // Original method - gets single page for category
+        /** Single page fetch for a category (legacy) */
         async getMoviesByCategory(category) {
-            if (this.moviesByCategory[category]?.items?.length) {
-                return;
-            }
-
-            this.loading = true;
+            if (this.moviesByCategory[category]?.items?.length) return
+            this.loading = true
             try {
-                const res = await axiosClient.get(`/v1/api/danh-sach/${category}?page=1&limit=24`);
-                const data = res.data?.data; // 👈 lấy đúng tầng "data"
-
-                if (!this.moviesByCategory[category]) {
-                    this.moviesByCategory[category] = {};
+                const res = await axiosClient.get(`/v1/api/danh-sach/${category}?page=1&limit=24`)
+                const data = res.data?.data || {}
+                this.moviesByCategory[category] = {
+                    items: data.items || [],
+                    params: data.params || {},
+                    allMovies: data.items || [],
                 }
-
-                this.moviesByCategory[category].items = data?.items || [];
-                this.moviesByCategory[category].params = data?.params || {};
-
-                // Nếu chưa có allMovies thì gán từ trang 1
-                if (!this.moviesByCategory[category].allMovies) {
-                    this.moviesByCategory[category].allMovies = data?.items || [];
-                }
-
-                console.log(`✅ Loaded ${this.moviesByCategory[category].items.length} movies for ${category}`);
-            } catch (error) {
-                console.error('❌ Lỗi khi lấy danh sách phim theo thể loại:', error);
+                console.log(`✅ Loaded first page for ${category}`)
+            } catch (e) {
+                console.error(`❌ Error loading category ${category}`, e)
             } finally {
-                this.loading = false;
+                this.loading = false
             }
-        }
+        },
 
-        ,
-
-
-        // New method - gets all movies from all pages for a category
-        async getAllMoviesByCategory(category, maxPages = 50) {
-            // Check if we already have all movies for this category
+        /** Fetch all pages for a category – default endpoint is "danh-sach" */
+        async getAllMoviesByCategory(category, endpoint = 'danh-sach', maxPages = 50) {
+            // Use cached data if sufficient
             if (this.moviesByCategory[category]?.allMovies?.length > 24) {
-                console.log(`📋 Already have ${this.moviesByCategory[category].allMovies.length} movies for ${category}`)
+                console.log(`📋 Using cached movies for ${category}`)
                 return this.moviesByCategory[category].allMovies
             }
 
             this.loading = true
-
-            // Initialize category data structure
-            if (!this.moviesByCategory[category]) {
-                this.moviesByCategory[category] = { allMovies: [] }
-            }
+            if (!this.moviesByCategory[category]) this.moviesByCategory[category] = { allMovies: [] }
 
             try {
-                let allMovies = []
-                let currentPage = 1
-                let hasMorePages = true
-                let totalPages = 1
-
-                console.log(`🎬 Starting to load all movies for category ${category}...`)
-
-                while (hasMorePages && currentPage <= maxPages) {
-                    console.log(`📄 Loading page ${currentPage} for category ${category}...`)
-
-                    const res = await axiosClient.get(`/v1/api/the-loai/${category}?page=${currentPage}&limit=1000`)
-
-                    if (res.data?.status && res.data?.data?.items?.length > 0) {
-                        const items = res.data.data.items
-                        allMovies.push(...items)
-
-                        // Store pagination info from first page
-                        if (currentPage === 1) {
-                            this.moviesByCategory[category].items = items
-                            this.moviesByCategory[category].params = res.data.data?.params || {}
-                            totalPages = res.data.data?.params?.pagination?.totalPages || 1
-                        }
-
-                        // Check if we have more pages
-                        const pagination = res.data.data?.params?.pagination
-                        if (pagination) {
-                            hasMorePages = currentPage < (pagination.totalPages || 1)
-                            totalPages = pagination.totalPages || 1
-                        } else {
-                            // If no pagination info, assume we got all data if less than limit
-                            hasMorePages = items.length >= 24
-                        }
-
-                        currentPage++
-
-                        // Add small delay to avoid overwhelming the server
-                        if (hasMorePages && currentPage <= maxPages) {
-                            await new Promise(resolve => setTimeout(resolve, 200))
-                        }
-                    } else {
-                        hasMorePages = false
+                let all = []
+                let page = 1
+                let hasMore = true
+                while (hasMore && page <= maxPages) {
+                    const res = await axiosClient.get(`/v1/api/${endpoint}/${category}?page=${page}&limit=1000`)
+                    const items = res.data?.data?.items || []
+                    all.push(...items)
+                    if (page === 1) {
+                        this.moviesByCategory[category].items = items
+                        this.moviesByCategory[category].params = res.data?.data?.params || {}
                     }
+                    const pagination = res.data?.data?.params?.pagination
+                    if (pagination) {
+                        hasMore = page < (pagination.totalPages || 1)
+                    } else {
+                        hasMore = items.length >= 24
+                    }
+                    page++
+                    if (hasMore && page <= maxPages) await new Promise(r => setTimeout(r, 200))
                 }
-
-                // Remove duplicates based on slug
-                const uniqueMovies = allMovies.filter((movie, index, self) =>
-                    index === self.findIndex(m => m.slug === movie.slug)
-                )
-
-                // Store all movies
-                this.moviesByCategory[category].allMovies = uniqueMovies
-
-                console.log(`✅ Loaded ${uniqueMovies.length} unique movies from ${currentPage - 1} pages for category ${category}`)
-
-                return uniqueMovies
-
-            } catch (error) {
-                console.error(`❌ Error loading all movies for category ${category}:`, error)
-
+                // Deduplicate by slug
+                const unique = all.filter((m, i, self) => i === self.findIndex(t => t.slug === m.slug))
+                this.moviesByCategory[category].allMovies = unique
+                console.log(`✅ Loaded ${unique.length} movies for ${category}`)
+                return unique
+            } catch (e) {
+                console.error(`❌ Failed to load all movies for ${category}`, e)
                 // Fallback to single page
-                try {
-                    await this.getMoviesByCategory(category)
-                    const fallbackMovies = this.moviesByCategory[category]?.items || []
-                    this.moviesByCategory[category].allMovies = fallbackMovies
-                    return fallbackMovies
-                } catch (fallbackError) {
-                    console.error('❌ Fallback also failed:', fallbackError)
-                    return []
-                }
+                await this.getMoviesByCategory(category)
+                const fallback = this.moviesByCategory[category]?.items || []
+                this.moviesByCategory[category].allMovies = fallback
+                return fallback
             } finally {
                 this.loading = false
             }
         },
 
+        /** Single page fetch for a country */
         async getMoviesByCountry(country) {
-            if (this.moviesByCountry[country]?.data) {
-                return;
-            }
-
+            if (this.moviesByCountry[country]?.data) return
             this.loading = true
             try {
                 const res = await axiosClient.get(`/v1/api/quoc-gia/${country}?page=1&limit=24`)
-
-                if (!this.moviesByCountry[country]) {
-                    this.moviesByCountry[country] = {}
+                this.moviesByCountry[country] = {
+                    data: res.data,
+                    allMovies: res.data?.data?.items || [],
                 }
-
-                this.moviesByCountry[country].data = res.data
-
-                // If no allMovies exist, use the first page data
-                if (!this.moviesByCountry[country].allMovies) {
-                    this.moviesByCountry[country].allMovies = res.data?.data?.items || []
-                }
-
-            } catch (error) {
-                console.error('❌ Lỗi khi lấy danh sách phim theo quốc gia:', error)
+                console.log(`✅ Loaded country ${country}`)
+            } catch (e) {
+                console.error(`❌ Error loading country ${country}`, e)
             } finally {
                 this.loading = false
             }
         },
 
-        // Gets all movies from all pages for a country
+        /** Fetch all pages for a country */
         async getAllMoviesByCountry(country, maxPages = 50) {
-            // Check if we already have all movies for this country
             if (this.moviesByCountry[country]?.allMovies?.length > 24) {
-                console.log(`📋 Already have ${this.moviesByCountry[country].allMovies.length} movies for ${country}`)
+                console.log(`📋 Using cached movies for ${country}`)
                 return this.moviesByCountry[country].allMovies
             }
-
             this.loading = true
-
-            // Initialize country data structure
-            if (!this.moviesByCountry[country]) {
-                this.moviesByCountry[country] = { allMovies: [] }
-            }
-
+            if (!this.moviesByCountry[country]) this.moviesByCountry[country] = { allMovies: [] }
             try {
-                let allMovies = []
-                let currentPage = 1
-                let hasMorePages = true
-                let totalPages = 1
-
-                console.log(`🎬 Starting to load all movies for ${country}...`)
-
-                while (hasMorePages && currentPage <= maxPages) {
-                    console.log(`📄 Loading page ${currentPage} for ${country}...`)
-
-                    const res = await axiosClient.get(`/v1/api/quoc-gia/${country}?page=${currentPage}&limit=1000`)
-
-                    if (res.data?.status && res.data?.data?.items?.length > 0) {
-                        const items = res.data.data.items
-                        allMovies.push(...items)
-
-                        // Store pagination info from first page
-                        if (currentPage === 1) {
-                            this.moviesByCountry[country].data = res.data
-                            totalPages = res.data.data?.params?.pagination?.totalPages || 1
-                        }
-
-                        // Check if we have more pages
-                        const pagination = res.data.data?.params?.pagination
-                        if (pagination) {
-                            hasMorePages = currentPage < (pagination.totalPages || 1)
-                            totalPages = pagination.totalPages || 1
-                        } else {
-                            // If no pagination info, assume we got all data if less than limit
-                            hasMorePages = items.length >= 24
-                        }
-
-                        currentPage++
-
-                        // Add small delay to avoid overwhelming the server
-                        if (hasMorePages && currentPage <= maxPages) {
-                            await new Promise(resolve => setTimeout(resolve, 200))
-                        }
+                let all = []
+                let page = 1
+                let hasMore = true
+                while (hasMore && page <= maxPages) {
+                    const res = await axiosClient.get(`/v1/api/quoc-gia/${country}?page=${page}&limit=1000`)
+                    const items = res.data?.data?.items || []
+                    all.push(...items)
+                    if (page === 1) this.moviesByCountry[country].data = res.data
+                    const pagination = res.data?.data?.params?.pagination
+                    if (pagination) {
+                        hasMore = page < (pagination.totalPages || 1)
                     } else {
-                        hasMorePages = false
+                        hasMore = items.length >= 24
                     }
+                    page++
+                    if (hasMore && page <= maxPages) await new Promise(r => setTimeout(r, 200))
                 }
-
-                // Remove duplicates based on slug
-                const uniqueMovies = allMovies.filter((movie, index, self) =>
-                    index === self.findIndex(m => m.slug === movie.slug)
-                )
-
-                // Store all movies
-                this.moviesByCountry[country].allMovies = uniqueMovies
-
-                console.log(`✅ Loaded ${uniqueMovies.length} unique movies from ${currentPage - 1} pages for ${country}`)
-
-                return uniqueMovies
-
-            } catch (error) {
-                console.error(`❌ Error loading all movies for ${country}:`, error)
-
-                // Fallback to single page
-                try {
-                    await this.getMoviesByCountry(country)
-                    const fallbackMovies = this.moviesByCountry[country]?.data?.data?.items || []
-                    this.moviesByCountry[country].allMovies = fallbackMovies
-                    return fallbackMovies
-                } catch (fallbackError) {
-                    console.error('❌ Fallback also failed:', fallbackError)
-                    return []
-                }
+                const unique = all.filter((m, i, self) => i === self.findIndex(t => t.slug === m.slug))
+                this.moviesByCountry[country].allMovies = unique
+                console.log(`✅ Loaded ${unique.length} movies for ${country}`)
+                return unique
+            } catch (e) {
+                console.error(`❌ Failed to load all movies for ${country}`, e)
+                await this.getMoviesByCountry(country)
+                const fallback = this.moviesByCountry[country]?.data?.data?.items || []
+                this.moviesByCountry[country].allMovies = fallback
+                return fallback
             } finally {
                 this.loading = false
             }
         },
 
+        /** Generic pagination helper (kept for compatibility) */
         async getMovies(category, page = 1, limit = 24) {
             const key = `${category}-page-${page}`
-            if (this.moviesByCategory[key]) { return }
+            if (this.moviesByCategory[key]) return
             this.loading = true
             try {
                 const res = await axiosClient.get(`/v1/api/danh-sach/${category}?page=${page}&limit=${limit}`)
-                const data = res.data.data
-
-                // API KKPhim có data.items, data.params
+                const data = res.data?.data || {}
                 this.moviesByCategory[key] = {
-                    items: data.items,
+                    items: data.items || [],
                     params: {
-                        currentPage: data.params.pagination.currentPage,
-                        totalPages: data.params.pagination.totalPages,
-                        limit: data.params.pagination.limit
-                    }
+                        currentPage: data.params?.pagination?.currentPage,
+                        totalPages: data.params?.pagination?.totalPages,
+                        limit: data.params?.pagination?.limit,
+                    },
                 }
-
-                console.log('✅ API response:', this.moviesByCategory[key])
-            }
-            catch (error) {
-                console.error('❌ Lỗi khi lấy danh sách phim theo thể loại:', error)
-            }
-            finally {
+                console.log(`✅ Loaded ${category} page ${page}`)
+            } catch (e) {
+                console.error(`❌ Error loading ${category} page ${page}`, e)
+            } finally {
                 this.loading = false
             }
         },
 
+        /** Movie detail */
         async getMovieDetail(slug) {
             this.loading = true
             try {
                 const res = await axiosClient.get(`v1/api/phim/${slug}`)
                 this.movieDetail = res.data
-                await new Promise(resolve => setTimeout(resolve, 1500))
-            } catch (error) {
-                console.error('❌ Lỗi khi lấy chi tiết phim:', error)
+                console.log(`✅ Loaded detail for ${slug}`)
+            } catch (e) {
+                console.error(`❌ Error loading detail for ${slug}`, e)
             } finally {
                 this.loading = false
             }
         },
 
-        // ✨ Tìm kiếm phim
+        /** Search */
         async searchMovies(keyword, page = 1, limit = 20) {
-            if (!keyword || !keyword.trim()) {
-                return null
+            if (!keyword?.trim()) return null
+            const key = `${keyword.trim().toLowerCase()}-page-${page}`
+            if (this.searchCache[key]) {
+                console.log('📋 Using cached search')
+                return this.searchCache[key]
             }
-
-            const normalizedKeyword = keyword.trim().toLowerCase()
-            const cacheKey = `${normalizedKeyword}-page-${page}`
-
-            // Kiểm tra cache trước
-            if (this.searchCache[cacheKey]) {
-                console.log('📋 Sử dụng cache cho:', keyword)
-                return this.searchCache[cacheKey]
-            }
-
             this.searchLoading = true
-
             try {
-                const res = await axiosClient.get(`v1/api/tim-kiem`, {
-                    params: {
-                        keyword: keyword.trim(),
-                        page,
-                        limit
-                    }
+                const res = await axiosClient.get('v1/api/tim-kiem', {
+                    params: { keyword: keyword.trim(), page, limit },
                 })
-
-                const searchData = {
-                    items: res.data.data?.items || [],
-                    params: res.data.data?.params || {},
-                    titlePage: res.data.data?.titlePage || `Kết quả tìm kiếm: ${keyword}`,
-                    keyword: keyword.trim()
+                const data = res.data?.data || {}
+                const result = {
+                    items: data.items || [],
+                    params: data.params || {},
+                    titlePage: data.titlePage || `Kết quả tìm kiếm: ${keyword}`,
+                    keyword: keyword.trim(),
                 }
-
-                // Cache kết quả trong 5 phút
-                this.searchCache[cacheKey] = searchData
-
-                // Xóa cache cũ sau 5 phút
-                setTimeout(() => {
-                    delete this.searchCache[cacheKey]
-                }, 5 * 60 * 1000)
-
-                // Update searchResults cho component sử dụng
-                if (page === 1) {
-                    this.searchResults = searchData.items
-                }
-
-                console.log('✅ Tìm kiếm thành công:', keyword, searchData.items.length, 'kết quả')
-                return searchData
-
-            } catch (error) {
-                console.error('❌ Lỗi khi tìm kiếm phim:', error)
-
-                // Return empty result on error
-                const emptyResult = {
-                    items: [],
-                    params: {},
-                    titlePage: `Không tìm thấy kết quả cho: ${keyword}`,
-                    keyword: keyword.trim()
-                }
-
+                this.searchCache[key] = result
+                setTimeout(() => delete this.searchCache[key], 5 * 60 * 1000)
+                if (page === 1) this.searchResults = result.items
+                console.log(`✅ Search "${keyword}" returned ${result.items.length}`)
+                return result
+            } catch (e) {
+                console.error('❌ Search error', e)
+                const empty = { items: [], params: {}, titlePage: `Không tìm thấy kết quả cho: ${keyword}`, keyword: keyword.trim() }
                 this.searchResults = []
-                return emptyResult
+                return empty
             } finally {
                 this.searchLoading = false
             }
         },
 
-        // ✨ Lấy gợi ý tìm kiếm (search suggestions)
         async getSearchSuggestions(keyword) {
-            if (!keyword || keyword.length < 2) {
-                return []
-            }
-
+            if (!keyword || keyword.length < 2) return []
             try {
-                // Gọi API tìm kiếm với limit nhỏ để lấy gợi ý
-                const result = await this.searchMovies(keyword, 1, 8)
-                return result?.items || []
-            } catch (error) {
-                console.error('❌ Lỗi khi lấy gợi ý tìm kiếm:', error)
+                const res = await this.searchMovies(keyword, 1, 8)
+                return res?.items || []
+            } catch (e) {
+                console.error('❌ Suggestion error', e)
                 return []
             }
         },
 
-        // ✨ Clear search cache
+        /** Cache helpers */
         clearSearchCache() {
             this.searchCache = {}
             this.searchResults = []
-            console.log('🗑️ Đã xóa cache tìm kiếm')
+            console.log('🗑️ Search cache cleared')
         },
-
-        // ✨ Clear specific search from cache
         clearSearchFromCache(keyword) {
-            const normalizedKeyword = keyword.toLowerCase()
-            Object.keys(this.searchCache).forEach(key => {
-                if (key.includes(normalizedKeyword)) {
-                    delete this.searchCache[key]
-                }
+            const norm = keyword.toLowerCase()
+            Object.keys(this.searchCache).forEach(k => {
+                if (k.includes(norm)) delete this.searchCache[k]
             })
         },
-
-        // ✨ Get popular/trending searches (mock data - có thể connect với API sau)
         getPopularSearches() {
-            return [
-                'One Piece', 'Naruto', 'Dragon Ball',
-                'Avengers', 'Spider-Man', 'Batman',
-                'Doraemon', 'Pokemon', 'Attack on Titan'
-            ]
+            return ['One Piece', 'Narco', 'Dragon Ball', 'Avengers', 'Spider-Man', 'Batman', 'Doraemon', 'Pokemon', 'Attack on Titan']
         },
 
-        // ✨ Clear all movies cache for a country
+        /** Country cache helpers */
         clearCountryMovies(country) {
             if (this.moviesByCountry[country]) {
                 delete this.moviesByCountry[country]
-                console.log(`🗑️ Cleared movies cache for ${country}`)
+                console.log(`🗑️ Cleared cache for ${country}`)
             }
         },
-
-        // ✨ Refresh movies for a country
         async refreshCountryMovies(country) {
             this.clearCountryMovies(country)
             return await this.getAllMoviesByCountry(country)
         },
 
-        // ✨ NEW: Clear all movies cache for a category
+        /** Category cache helpers */
         clearCategoryMovies(category) {
             if (this.moviesByCategory[category]) {
                 delete this.moviesByCategory[category]
-                console.log(`🗑️ Cleared movies cache for category ${category}`)
+                console.log(`🗑️ Cleared cache for ${category}`)
             }
         },
-
-        // ✨ NEW: Refresh movies for a category
         async refreshCategoryMovies(category) {
             this.clearCategoryMovies(category)
             return await this.getAllMoviesByCategory(category)
-        }
+        },
     },
 })

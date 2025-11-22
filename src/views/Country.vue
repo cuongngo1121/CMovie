@@ -57,7 +57,7 @@
           </div>
         </div>
 
-    <!-- Movie count and controls -->
+        <!-- Movie count and controls -->
         <div class="flex items-center gap-4 ml-auto">
           <div class="flex items-center gap-2 text-gray-400 text-sm">
             <span>{{ movieCount }} phim</span>
@@ -82,9 +82,9 @@
       </div>
     </div>
 
-    <!-- Loading state -->
+    <!-- Skeleton Loading State -->
     <div v-if="isLoading" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-      <div v-for="n in 12" :key="n" class="loading-skeleton rounded-2xl aspect-[2/3] bg-gray-800"></div>
+      <SkeletonCard v-for="n in 12" :key="n" />
     </div>
 
     <!-- No movies message -->
@@ -179,14 +179,14 @@
                 </div>
               </div>
 
-              <!-- Categories -->
-              <div v-if="movie.category && movie.category.length > 0" class="flex flex-wrap gap-1 pt-2">
+              <!-- Countries -->
+              <div v-if="movie.country && movie.country.length > 0" class="flex flex-wrap gap-1 pt-2">
                 <span 
-                  v-for="cat in movie.category.slice(0, 2)" 
-                  :key="cat.id"
+                  v-for="country in movie.country.slice(0, 2)" 
+                  :key="country.id"
                   class="px-2 py-1 bg-gray-700/50 text-xs rounded-md text-gray-300"
                 >
-                  {{ cat.name }}
+                  {{ country.name }}
                 </span>
               </div>
             </div>
@@ -243,6 +243,7 @@ import { ref, onMounted, computed, watch, onUnmounted } from 'vue';
 import { useMovieStore } from '../stores/movieStore';
 import { useRouter } from 'vue-router';
 import NavBar from '../components/NavBar.vue';
+import SkeletonCard from '../components/SkeletonCard.vue';
 
 const props = defineProps(['initialSlug']);
 const router = useRouter();

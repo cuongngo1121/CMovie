@@ -23,7 +23,7 @@
             class="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-xl hover:border-red-500/50 transition-all duration-300 min-w-[280px]"
           >
             <div class="flex items-center gap-2">
-              <span class="text-2xl">{{ selectedCategory.icon }}</span>
+              <component :is="selectedCategory.icon" class="w-6 h-6 text-red-500" />
               <span class="font-semibold">{{ selectedCategory.name }}</span>
             </div>
             <svg 
@@ -50,7 +50,7 @@
                 @click="selectCategory(category)"
                 class="flex items-center gap-3 px-4 py-3 hover:bg-red-600/20 rounded-lg cursor-pointer transition-colors duration-200 group"
               >
-                <span class="text-xl">{{ category.icon }}</span>
+                <component :is="category.icon" class="w-5 h-5 text-gray-400 group-hover:text-red-500" />
                 <span class="font-medium group-hover:text-red-400">{{ category.name }}</span>
               </div>
             </div>
@@ -82,9 +82,9 @@
       </div>
     </div>
 
-    <!-- Loading state -->
+    <!-- Skeleton Loading State -->
     <div v-if="isLoading" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-      <div v-for="n in 12" :key="n" class="loading-skeleton rounded-2xl aspect-[2/3] bg-gray-800"></div>
+      <SkeletonCard v-for="n in 12" :key="n" />
     </div>
 
     <!-- No movies message -->
@@ -243,6 +243,14 @@ import { ref, onMounted, computed, watch, onUnmounted } from 'vue';
 import { useMovieStore } from '../stores/movieStore';
 import { useRouter } from 'vue-router';
 import NavBar from '../components/NavBar.vue';
+import SkeletonCard from '../components/SkeletonCard.vue';
+import { 
+  Swords, Heart, Laugh, Landmark, Brain, Siren, 
+  Swords as War, Trophy, HandMetal, Rocket, Map, 
+  FlaskConical, Ghost, Music, Zap, BookOpen, 
+  Users, Drama, HelpCircle, GraduationCap, Star, 
+  AlertCircle 
+} from 'lucide-vue-next';
 
 const props = defineProps(['initialSlug']);
 const router = useRouter();
@@ -260,30 +268,30 @@ const initialDisplayCount = 18;
 const hasMorePages = ref(true);
 const totalItems = ref(0);
 
-// Categories data with icons
+// Categories data with Lucide icons
 const categories = ref([
-  { slug: 'hanh-dong', name: 'Hành Động', icon: '💥' },
-  { slug: 'tinh-cam', name: 'Tình Cảm', icon: '💖' },
-  { slug: 'hai-huoc', name: 'Hài Hước', icon: '😂' },
-  { slug: 'co-trang', name: 'Cổ Trang', icon: '🏛️' },
-  { slug: 'tam-ly', name: 'Tâm Lý', icon: '🧠' },
-  { slug: 'hinh-su', name: 'Hình Sự', icon: '🔍' },
-  { slug: 'chien-tranh', name: 'Chiến Tranh', icon: '⚔️' },
-  { slug: 'the-thao', name: 'Thể Thao', icon: '⚽' },
-  { slug: 'vo-thuat', name: 'Võ Thuật', icon: '🥊' },
-  { slug: 'vien-tuong', name: 'Viễn Tưởng', icon: '🚀' },
-  { slug: 'phieu-luu', name: 'Phiêu Lưu', icon: '🗺️' },
-  { slug: 'khoa-hoc', name: 'Khoa Học', icon: '🧪' },
-  { slug: 'kinh-di', name: 'Kinh Dị', icon: '👻' },
-  { slug: 'am-nhac', name: 'Âm Nhạc', icon: '🎵' },
-  { slug: 'than-thoai', name: 'Thần Thoại', icon: '⚡' },
-  { slug: 'tai-lieu', name: 'Tài Liệu', icon: '📚' },
-  { slug: 'gia-dinh', name: 'Gia Đình', icon: '👨‍👩‍👧‍👦' },
-  { slug: 'chinh-kich', name: 'Chính Kịch', icon: '🎭' },
-  { slug: 'bi-an', name: 'Bí Ẩn', icon: '🔮' },
-  { slug: 'hoc-duong', name: 'Học Đường', icon: '🎓' },
-  { slug: 'kinh-dien', name: 'Kinh Điển', icon: '🏆' },
-  { slug: 'phim-18', name: 'Phim 18+', icon: '🔞' }
+  { slug: 'hanh-dong', name: 'Hành Động', icon: Swords },
+  { slug: 'tinh-cam', name: 'Tình Cảm', icon: Heart },
+  { slug: 'hai-huoc', name: 'Hài Hước', icon: Laugh },
+  { slug: 'co-trang', name: 'Cổ Trang', icon: Landmark },
+  { slug: 'tam-ly', name: 'Tâm Lý', icon: Brain },
+  { slug: 'hinh-su', name: 'Hình Sự', icon: Siren },
+  { slug: 'chien-tranh', name: 'Chiến Tranh', icon: War },
+  { slug: 'the-thao', name: 'Thể Thao', icon: Trophy },
+  { slug: 'vo-thuat', name: 'Võ Thuật', icon: HandMetal },
+  { slug: 'vien-tuong', name: 'Viễn Tưởng', icon: Rocket },
+  { slug: 'phieu-luu', name: 'Phiêu Lưu', icon: Map },
+  { slug: 'khoa-hoc', name: 'Khoa Học', icon: FlaskConical },
+  { slug: 'kinh-di', name: 'Kinh Dị', icon: Ghost },
+  { slug: 'am-nhac', name: 'Âm Nhạc', icon: Music },
+  { slug: 'than-thoai', name: 'Thần Thoại', icon: Zap },
+  { slug: 'tai-lieu', name: 'Tài Liệu', icon: BookOpen },
+  { slug: 'gia-dinh', name: 'Gia Đình', icon: Users },
+  { slug: 'chinh-kich', name: 'Chính Kịch', icon: Drama },
+  { slug: 'bi-an', name: 'Bí Ẩn', icon: HelpCircle },
+  { slug: 'hoc-duong', name: 'Học Đường', icon: GraduationCap },
+  { slug: 'kinh-dien', name: 'Kinh Điển', icon: Star },
+  { slug: 'phim-18', name: 'Phim 18+', icon: AlertCircle }
 ]);
 
 const selectedCategory = ref(categories.value[0]); // Default to first category

@@ -126,8 +126,9 @@ const movies = ref([])
 onMounted(async () => {
   loading.value = true
   try {
-    await movieStore.getMoviesByCategory(category)
-    movies.value = movieStore.moviesByCategory[category]?.items || []
+    // Use 'danh-sach' endpoint for Phim Le
+    await movieStore.getAllMoviesByCategory(category, 'danh-sach')
+    movies.value = movieStore.moviesByCategory[category]?.allMovies || []
   } finally {
     loading.value = false
   }

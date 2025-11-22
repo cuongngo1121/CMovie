@@ -20,11 +20,24 @@
       </button>
     </div>
 
-   
-
-    <!-- Loading skeleton -->
-    <div v-if="isLoading" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 px-2 md:px-4">
-      <div v-for="n in 10" :key="n" class="loading-skeleton rounded-2xl aspect-[2/3] bg-bg-card"></div>
+    <!-- Skeleton Loading State -->
+    <div v-if="isLoading" class="relative px-2 md:px-4">
+      <swiper
+        :modules="[Autoplay, Navigation]"
+        :slides-per-view="2"
+        :space-between="16"
+        :breakpoints="{
+          640: { slidesPerView: 2.2, spaceBetween: 20 },
+          768: { slidesPerView: 3.2, spaceBetween: 24 },
+          1024: { slidesPerView: 4.2, spaceBetween: 28 },
+          1280: { slidesPerView: 5.2, spaceBetween: 32 }
+        }"
+        class="movie-swiper pb-4"
+      >
+        <swiper-slide v-for="n in 6" :key="n">
+          <SkeletonCard class="h-full" />
+        </swiper-slide>
+      </swiper>
     </div>
 
     <!-- No movies message -->
@@ -165,6 +178,7 @@ import 'swiper/css/navigation';
 import { onMounted, computed, ref } from 'vue';
 import { useMovieStore } from '../stores/movieStore';
 import { useRouter } from 'vue-router';
+import SkeletonCard from './SkeletonCard.vue';
 
 const router = useRouter();
 const movieStore = useMovieStore();
@@ -318,22 +332,6 @@ function handleImageError(event) {
 
 .group:hover .play-button {
   transform: scale(1);
-}
-
-/* Loading skeleton animation */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.loading-skeleton {
-  background: linear-gradient(90deg, 
-    rgba(255, 255, 255, 0.1) 25%, 
-    rgba(255, 255, 255, 0.2) 50%, 
-    rgba(255, 255, 255, 0.1) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
 }
 
 /* Smooth transitions for all interactive elements */

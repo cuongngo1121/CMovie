@@ -31,9 +31,24 @@
         </router-link>
       </div>
 
-      <!-- Loading State -->
-      <div v-if="movieStore.loading" class="flex justify-center items-center py-20">
-        <div class="loading-spinner"></div>
+      <!-- Skeleton Loading State -->
+      <div v-if="movieStore.loading" class="relative">
+        <swiper
+          :modules="[Autoplay, Navigation, Pagination]"
+          :slides-per-view="2"
+          :space-between="16"
+          :breakpoints="{
+            640: { slidesPerView: 3.2, spaceBetween: 20 },
+            768: { slidesPerView: 4.2, spaceBetween: 24 },
+            1024: { slidesPerView: 5.2, spaceBetween: 28 },
+            1280: { slidesPerView: 6.2, spaceBetween: 32 }
+          }"
+          class="pb-12 !overflow-visible"
+        >
+          <swiper-slide v-for="n in 6" :key="n" class="h-auto">
+            <SkeletonCard class="h-full" />
+          </swiper-slide>
+        </swiper>
       </div>
 
       <!-- Movies Swiper -->
@@ -120,6 +135,7 @@ import { onMounted, computed } from 'vue'
 import { useMovieStore } from '../stores/movieStore'
 import { useRouter } from 'vue-router'
 import MovieCard from './MovieCard.vue'
+import SkeletonCard from './SkeletonCard.vue'
 
 const movieStore = useMovieStore()
 const router = useRouter()
@@ -143,19 +159,6 @@ const goToMovieDetails = (movie) => {
 <style scoped>
 .text-shadow {
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(245, 158, 11, 0.3);
-  border-top-color: #F59E0B;
-  border-radius: 50%;
-  animation: spin 1s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 /* Custom Pagination Dots */

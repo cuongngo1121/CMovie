@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-primary-dark">
     <NavBar />
-    
+
     <!-- Header Section -->
     <div class="pt-20 pb-8 px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto">
@@ -126,8 +126,8 @@ const movies = ref([])
 onMounted(async () => {
   loading.value = true
   try {
-    await movieStore.getMoviesByCategory(category)
-    movies.value = movieStore.moviesByCategory[category]?.items || []
+    await movieStore.getAllMoviesByCategory(category, 'danh-sach')
+    movies.value = movieStore.moviesByCategory[category]?.allMovies || []
   } finally {
     loading.value = false
   }
@@ -135,11 +135,11 @@ onMounted(async () => {
 
 const filteredMovies = computed(() => {
   let result = [...movies.value]
-  
+
   if (filters.year) {
     result = result.filter(m => m.year === filters.year || m.year === parseInt(filters.year))
   }
-  
+
   if (filters.country) {
     result = result.filter(m => {
       const countries = Array.isArray(m.country) ? m.country : []
@@ -149,7 +149,7 @@ const filteredMovies = computed(() => {
       })
     })
   }
-  
+
   if (filters.genre) {
     result = result.filter(m => {
       const categories = Array.isArray(m.category) ? m.category : []
@@ -159,13 +159,13 @@ const filteredMovies = computed(() => {
       })
     })
   }
-  
+
   if (filters.sort === 'year') {
     result.sort((a, b) => (b.year || 0) - (a.year || 0))
   } else if (filters.sort === 'name') {
     result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
   }
-  
+
   return result
 })
 
@@ -188,24 +188,18 @@ function getVisiblePages() {
   const pages = []
 
   if (total <= 7) {
-    for (let i = 1; i <= total; i++) {
-      pages.push(i)
-    }
+    for (let i = 1; i <= total; i++) pages.push(i)
   } else {
     pages.push(1)
     if (current > 4) pages.push('...')
-    
     const start = Math.max(2, current - 1)
     const end = Math.min(total - 1, current + 1)
-    
     for (let i = start; i <= end; i++) {
       if (i !== 1 && i !== total) pages.push(i)
     }
-    
     if (current < total - 3) pages.push('...')
     if (total > 1) pages.push(total)
   }
-  
   return pages
 }
 
