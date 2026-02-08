@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-screen min-h-[600px] bg-black overflow-hidden group">
+  <div class="relative w-full h-[85vh] md:h-screen min-h-[500px] bg-black overflow-hidden group">
     <swiper
       :slides-per-view="1"
       :modules="[Autoplay, Pagination, EffectFade]"
@@ -30,57 +30,57 @@
             loading="lazy"
           >
           <!-- Cinematic Gradients -->
-          <div class="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent"></div>
-          <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-transparent h-40"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-transparent h-32"></div>
         </div>
 
         <!-- Content Content -->
-        <div class="absolute inset-0 flex items-center">
-          <div class="container mx-auto px-4 md:px-12 max-w-[1536px] pt-20">
-            <div class="max-w-4xl space-y-6">
+        <div class="absolute inset-0 flex items-end md:items-center pb-24 md:pb-0">
+          <div class="container mx-auto px-4 md:px-12 max-w-[1536px] pt-16 md:pt-20">
+            <div class="max-w-4xl space-y-3 md:space-y-6">
               <!-- Movie Title -->
-              <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight tracking-tighter drop-shadow-2xl opacity-0 animate-slide-up" style="animation-delay: 0.2s;">
+              <h1 class="text-3xl sm:text-4xl md:text-7xl lg:text-8xl font-black text-white leading-tight tracking-tighter drop-shadow-2xl opacity-0 animate-slide-up" style="animation-delay: 0.2s;">
                 {{ movie.name }}
               </h1>
               
               <!-- Origin Name -->
-              <p class="text-2xl md:text-3xl text-white/80 font-light italic opacity-0 animate-slide-up" style="animation-delay: 0.4s;">
+              <p class="text-lg md:text-3xl text-white/80 font-light italic opacity-0 animate-slide-up line-clamp-1" style="animation-delay: 0.4s;">
                  {{ movie.origin_name }}
               </p>
 
               <!-- Meta Row -->
-              <div class="flex items-center gap-4 text-base md:text-lg font-medium text-gray-200 opacity-0 animate-slide-up" style="animation-delay: 0.6s;">
+              <div class="flex items-center gap-3 md:gap-4 text-sm md:text-lg font-medium text-gray-200 opacity-0 animate-slide-up" style="animation-delay: 0.6s;">
                 <span class="text-[#46d369] font-bold">98% Match</span>
                 <span class="text-gray-400">•</span>
                 <span>{{ movie.year }}</span>
                 <span class="text-gray-400">•</span>
-                <span class="border border-white/30 px-2 py-0.5 rounded text-sm bg-black/30 backdrop-blur-sm">{{ movie.quality || 'HD' }}</span>
+                <span class="border border-white/30 px-1.5 py-0.5 rounded text-xs md:text-sm bg-black/30 backdrop-blur-sm">{{ movie.quality || 'HD' }}</span>
                 <span class="text-gray-400">•</span>
-                <span>{{ movie.lang }}</span>
+                <span class="truncate max-w-[100px] md:max-w-none">{{ movie.lang }}</span>
               </div>
 
               <!-- Description -->
-              <p class="text-gray-300 text-lg md:text-xl line-clamp-3 max-w-2xl leading-relaxed drop-shadow-lg opacity-0 animate-slide-up" style="animation-delay: 0.8s;">
+              <p class="text-gray-300 text-sm md:text-xl line-clamp-2 md:line-clamp-3 max-w-xl md:max-w-2xl leading-relaxed drop-shadow-lg opacity-0 animate-slide-up" style="animation-delay: 0.8s;">
                  {{ movie.content || 'Một siêu phẩm điện ảnh không thể bỏ lỡ. Khám phá ngay thế giới phim đặc sắc với chất lượng hình ảnh tuyệt đỉnh...' }}
               </p>
 
               <!-- Buttons -->
-              <div class="flex flex-wrap gap-4 pt-6 opacity-0 animate-slide-up" style="animation-delay: 1s;">
+              <div class="flex items-center gap-3 pt-4 md:pt-6 opacity-0 animate-slide-up" style="animation-delay: 1s;">
                 <button
                   @click="goToMovieWatch(movie)"
-                  class="group flex items-center gap-3 px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-red-600/20"
+                  class="flex-1 md:flex-none group flex items-center justify-center gap-2 md:gap-3 px-4 md:px-8 py-3 md:py-4 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-sm md:text-lg transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-red-600/20"
                 >
-                  <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  <svg class="w-5 h-5 md:w-8 md:h-8 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                   <span>Phát Ngay</span>
                 </button>
                 
                 <button
                   @click="goToMovieDetails(movie)"
-                  class="group flex items-center gap-3 px-8 py-4 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold text-lg transition-all duration-300 backdrop-blur-md hover:scale-105"
+                  class="flex-1 md:flex-none group flex items-center justify-center gap-2 md:gap-3 px-4 md:px-8 py-3 md:py-4 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold text-sm md:text-lg transition-all duration-300 backdrop-blur-md hover:scale-105"
                 >
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  <span>Thông Tin</span>
+                  <svg class="w-5 h-5 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span>Chi Tiết</span>
                 </button>
               </div>
             </div>
@@ -90,7 +90,7 @@
     </swiper>
 
     <!-- Custom Pagination -->
-    <div class="hero-pagination absolute bottom-12 right-12 z-20 flex gap-3 justify-end"></div>
+    <div class="hero-pagination absolute bottom-24 md:bottom-12 right-4 md:right-12 z-20 flex gap-2 md:gap-3 justify-end"></div>
   </div>
 </template>
 

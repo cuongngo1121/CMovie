@@ -21,9 +21,15 @@ const props = defineProps({
 const artRef = ref(null);
 const instance = ref(null);
 
+const emit = defineEmits(['loaded', 'error']);
+
 function initPlayer() {
   if (instance.value) {
-    instance.value.destroy(false);
+    try {
+      instance.value.destroy(false);
+    } catch (e) {
+      // Ignore destroy errors
+    }
   }
 
   nextTick(() => {
@@ -41,13 +47,34 @@ function initPlayer() {
             hls.attachMedia(video);
             art.hls = hls;
             art.on('destroy', () => hls.destroy());
+            
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+               emit('loaded'); // Signal ready when HLS manifest parses
+            });
+            hls.on(Hls.Events.ERROR, (event, data) => {
+               if (data.fatal) emit('error', data);
+            });
+
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = url;
+            video.addEventListener('loadedmetadata', () => {
+               emit('loaded');
+            });
           } else {
             art.notice.show = 'Unsupported playback format: m3u8';
+            emit('error', 'Unsupported format');
           }
         },
       },
+    });
+
+    // Native events
+    instance.value.on('video:canplay', () => {
+      emit('loaded');
+    });
+    
+    instance.value.on('video:error', () => {
+      emit('error');
     });
   });
 }

@@ -257,11 +257,13 @@ function closeMobileMenu() {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('toggle-mobile-menu', toggleMobileMenu)
   initTheme()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('toggle-mobile-menu', toggleMobileMenu)
   document.body.style.overflow = ''
 })
 </script>

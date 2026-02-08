@@ -69,10 +69,12 @@
               <!-- Loading Overlay -->
               <div v-if="loadingEpisode" class="absolute inset-0 bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center z-30 transition-opacity duration-300">
                 <div class="relative w-16 h-16 mb-4">
-                  <div class="absolute inset-0 border-4 border-amber-500/30 rounded-full"></div>
-                  <div class="absolute inset-0 border-4 border-transparent border-t-amber-500 rounded-full animate-spin"></div>
+                  <div class="absolute inset-0 border-4 border-red-900/30 rounded-full"></div>
+                  <div class="absolute inset-0 border-4 border-transparent border-t-red-600 rounded-full animate-spin-slow"></div>
+                  <div class="absolute inset-3 border-4 border-red-900/20 rounded-full"></div>
+                  <div class="absolute inset-3 border-4 border-transparent border-b-red-500 rounded-full animate-spin-reverse"></div>
                 </div>
-                <p class="text-amber-500 font-medium animate-pulse">{{ toastMessage || 'Đang tải tập phim...' }}</p>
+                <p class="text-red-500 font-bold animate-pulse tracking-wide">{{ toastMessage || 'Đang tải tập phim...' }}</p>
               </div>
             </div>
 
@@ -387,6 +389,22 @@ watch(() => route.params.slug, async (newSlug) => {
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 1.5s linear infinite;
+}
+
+@keyframes spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 2s linear infinite;
 }
 
 @keyframes float {
