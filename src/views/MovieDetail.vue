@@ -145,9 +145,7 @@
            </div>
 
            <!-- Placeholder for Ads or Top Trending Sidebar -->
-           <div class="bg-gradient-to-b from-red-900/20 to-transparent p-6 rounded-2xl border border-red-500/20 text-center">
-             <p class="text-red-400 font-bold">📢 Xem phim không quảng cáo tại OPhim!</p>
-           </div>
+
         </div>
       </div>
 
