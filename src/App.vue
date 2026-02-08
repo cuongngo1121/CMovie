@@ -10,7 +10,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useMovieStore } from './stores/movieStore'
 import { useRouter } from 'vue-router'
 import BottomNav from './components/BottomNav.vue'
 import LoadingOverlay from './components/LoadingOverlay.vue'
@@ -19,6 +20,7 @@ import WelcomeScreen from './components/WelcomeScreen.vue'
 const isLoading = ref(false)
 const showWelcome = ref(true)
 const router = useRouter()
+const movieStore = useMovieStore()
 
 router.beforeEach((to, from, next) => {
   // Only show loading overlay if welcome screen is finished
@@ -33,6 +35,25 @@ router.afterEach(() => {
     isLoading.value = false
   }, 1000) // Minimum loading time for smooth transition
 })
+
+onMounted(() => {
+  prefetchHomeData()
+})
+
+async function prefetchHomeData() {
+  try {
+    // Prefetch all home page data in parallel
+    await Promise.allSettled([
+      movieStore.getNewMovies(),
+      movieStore.getMoviesByCategory('phim-bo'),
+      movieStore.getMoviesByCategory('phim-le'),
+      movieStore.getMoviesByCategory('phim-chieu-rap'),
+      movieStore.getMoviesByCategory('hoat-hinh')
+    ])
+  } catch (e) {
+    console.error('Prefetch failed', e)
+  }
+}
 
 const handleWelcomeFinish = () => {
   showWelcome.value = false

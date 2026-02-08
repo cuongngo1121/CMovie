@@ -86,11 +86,42 @@ const routes = [
         name: "SearchResults",
         component: () => import("../views/SearchResults.vue"),
     },
+    {
+        path: "/:pathMatch(.*)*",
+        name: "NotFound",
+        component: () => import("../views/NotFound.vue"),
+        meta: { title: "404 - Không tìm thấy trang" }
+    },
 ]
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { top: 0, behavior: 'smooth' }
+        }
+    }
 });
+
+router.beforeEach((to, from, next) => {
+    // Default title
+    let title = "Phim Chùa - Xem Phim Online"
+
+    // Check if route has meta title
+    if (to.meta && to.meta.title) {
+        title = `${to.meta.title} | Phim Chùa`
+    }
+
+    // Determine dynamic title based on logic (optional, mainly handled in components or here)
+    if (to.name === 'Home') title = "Phim Chùa - Trang Chủ"
+    if (to.name === 'Movies') title = "Danh Sách Phim - Phim Chùa"
+    if (to.name === 'Series') title = "Phim Bộ - Phim Chùa"
+
+    document.title = title
+    next()
+})
 
 export default router;

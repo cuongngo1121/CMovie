@@ -74,15 +74,27 @@
         @mouseleave="handlePopupLeave"
       >
         <!-- Image Preview (Reliable & Beautiful) -->
-        <div class="aspect-video relative bg-gray-100 group/image">
+        <div class="aspect-video relative bg-gray-100 group/image overflow-hidden">
+          <div v-if="trailerUrl && getYoutubeEmbedUrl(trailerUrl)" class="absolute inset-0 z-10 w-full h-full bg-black">
+             <iframe
+              :src="getYoutubeEmbedUrl(trailerUrl)"
+              frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              class="w-full h-full pointer-events-none"
+            ></iframe>
+            <!-- Overlay to capture clicks so dragging doesn't get stuck in iframe -->
+            <div @click.stop="handleClick" class="absolute inset-0 z-20 cursor-pointer bg-transparent"></div>
+          </div>
+
           <img 
+            v-if="!trailerUrl || !getYoutubeEmbedUrl(trailerUrl)"
             :src="getImageUrl(movie.poster_url || movie.thumb_url)" 
             class="w-full h-full object-cover transition-transform duration-700 group-hover/image:scale-105"
           />
           <div class="absolute inset-0 bg-black/10"></div>
           
           <!-- Play Button (Solid Pastel) -->
-          <button @click.stop="handleClick" class="absolute inset-0 flex items-center justify-center group/play">
+          <button v-if="!trailerUrl" @click.stop="handleClick" class="absolute inset-0 flex items-center justify-center group/play z-30">
             <div class="w-14 h-14 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg text-brand group-hover/play:scale-110 transition-transform duration-300">
                <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z"/>
@@ -127,7 +139,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import axiosClient from '../api/axiosClient'
 
 const props = defineProps({
   movie: { type: Object, required: true }
@@ -141,6 +154,8 @@ const isHoveringPopup = ref(false)
 const keepPopupOpen = ref(false)
 const popupStyle = ref({})
 const isMobile = ref(false)
+const trailerUrl = ref('')
+const loadingTrailer = ref(false)
 let hoverTimer = null
 
 const popupAnimationClass = computed(() => {
@@ -170,7 +185,36 @@ function startHoverTimer() {
   hoverTimer = setTimeout(() => {
     calculatePosition()
     showPopup.value = true
+    fetchTrailer()
   }, 400)
+}
+
+async function fetchTrailer() {
+  if (trailerUrl.value) return 
+  if (props.movie.trailer_url) {
+    trailerUrl.value = props.movie.trailer_url
+    return
+  }
+  
+  loadingTrailer.value = true
+  try {
+     const res = await axiosClient.get(`v1/api/phim/${props.movie.slug}`)
+     trailerUrl.value = res.data?.movie?.trailer_url || ''
+  } catch (e) {
+     console.error('Failed to fetch trailer for popup', e)
+  } finally {
+     loadingTrailer.value = false
+  }
+}
+
+function getYoutubeEmbedUrl(url) {
+  if (!url) return ''
+  const match = url.match(/v=([^&]+)/) || url.match(/youtu\.be\/([^?]+)/);
+  if (match && match[1]) {
+    // Autoplay, Mute (required for autoplay), Controls=0, ModestBranding, Loop, Playlist (for loop)
+    return `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&controls=0&modestbranding=1&loop=1&playlist=${match[1]}&rel=0`;
+  }
+  return '';
 }
 
 function cancelHover() {
@@ -191,6 +235,9 @@ function closePopup() {
   isHoveringPopup.value = false
   keepPopupOpen.value = false
   clearTimeout(hoverTimer)
+  // Clear trailer URL to stop video when closed (optional, helps performance)
+  // But maybe better to keep if user hovers back quickly? 
+  // For now let's keep it simply cached in component instance
 }
 
 function calculatePosition() {
