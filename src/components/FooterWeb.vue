@@ -1,85 +1,75 @@
 <template>
-  <footer class="mt-20 border-t border-theme bg-theme-primary pt-16 pb-8">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
-        <!-- Brand Section -->
-        <div class="space-y-4">
-          <div class="flex items-center gap-3">
-             <div class="relative w-12 h-12">
-               <!-- Temple Icon (Footer Version) -->
-              <svg viewBox="0 0 512 512" class="w-full h-full text-brand" xmlns="http://www.w3.org/2000/svg">
-                <path d="M256 32L32 160h448L256 32z" fill="#E50914"/>
-                <path d="M480 160H32v32h448v-32z" fill="#B20710"/>
-                <path d="M64 192h64v256H64zM384 192h64v256h-64z" fill="#E50914" opacity="0.8"/>
-                <path d="M192 224V416L352 320L192 224Z" fill="#FFD700"/>
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-xl md:text-2xl font-black text-brand">PHIM CHÙA</h3>
-              <p class="text-xs text-brand font-medium italic">"Chùa miễn phí - Phim hết ý"</p>
-            </div>
-          </div>
-          
-          <p class="text-sm text-theme-secondary leading-relaxed">
-            Xem phim trực tuyến miễn phí chất lượng cao. Cập nhật liên tục mỗi ngày.
+  <footer class="w-full mt-20 bg-[#0a0a0a] border-t border-white/5 pt-16 pb-8 text-sm">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        
+        <!-- Column 1: Brand (Text Only) & About -->
+        <div class="col-span-1 md:col-span-1">
+          <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500 mb-6">PHIM CHÙA</h2>
+          <p class="text-gray-400 leading-relaxed mb-6">
+            Nền tảng xem phim miễn phí với trải nghiệm đỉnh cao. Không quảng cáo, không giật lag, chỉ có niềm vui.
           </p>
-          
-          <div class="flex gap-3">
-            <a href="#" class="w-10 h-10 rounded-full border border-theme flex items-center justify-center text-theme-secondary hover:text-brand hover:border-brand transition-colors" aria-label="Facebook">
+          <div class="flex gap-4">
+            <a href="#" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             </a>
-            <a href="#" class="w-10 h-10 rounded-full border border-theme flex items-center justify-center text-theme-secondary hover:text-brand hover:border-brand transition-colors" aria-label="Instagram">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            <a href="#" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all">
+               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.811 7.661c.427 0 .711.018.847.027.051 1.706.051 3.428.051 5.143v.018c-3.14 0-5.115-1.558-5.115-4.502h-2.61v8.834c0 1.944 1.344 3.425 3.311 3.425 2.828 0 4.225-2.028 4.225-2.028v1.739h2.466c0-4.322.012-9.28.012-12.656h-2.583c-.012.396-.012.783-.012 1.171-.285-1.077-1.396-1.171-1.396-1.171h-.195z"/></svg>
             </a>
           </div>
         </div>
 
-        <!-- Links -->
+        <!-- Column 2: Browse -->
         <div>
-          <h4 class="text-theme-primary font-bold mb-6 text-lg">Danh Mục</h4>
-          <ul class="space-y-3">
-            <li><router-link to="/danh-sach/phim-le" class="text-theme-secondary hover:text-brand transition-colors text-sm">Phim Lẻ</router-link></li>
-            <li><router-link to="/danh-sach/phim-bo" class="text-theme-secondary hover:text-brand transition-colors text-sm">Phim Bộ</router-link></li>
-            <li><router-link to="/danh-sach/hoat-hinh" class="text-theme-secondary hover:text-brand transition-colors text-sm">Hoạt Hình</router-link></li>
-            <li><router-link to="/danh-sach/tv-shows" class="text-theme-secondary hover:text-brand transition-colors text-sm">TV Shows</router-link></li>
+          <h3 class="font-bold text-white mb-6 uppercase tracking-wider text-xs">Khám Phá</h3>
+          <ul class="space-y-4">
+            <li><router-link to="/movies" class="text-gray-400 hover:text-red-500 transition-colors">Phim Mới</router-link></li>
+            <li><router-link to="/series" class="text-gray-400 hover:text-red-500 transition-colors">Phim Bộ</router-link></li>
+            <li><router-link to="/animation" class="text-gray-400 hover:text-red-500 transition-colors">Hoạt Hình</router-link></li>
+            <li><router-link to="/genre" class="text-gray-400 hover:text-red-500 transition-colors">Thể Loại</router-link></li>
           </ul>
         </div>
 
+        <!-- Column 3: Help -->
         <div>
-          <h4 class="text-theme-primary font-bold mb-6 text-lg">Hỗ Trợ</h4>
-          <ul class="space-y-3">
-             <li><a href="#" class="text-theme-secondary hover:text-brand transition-colors text-sm">Điều Khoản</a></li>
-             <li><a href="#" class="text-theme-secondary hover:text-brand transition-colors text-sm">Chính Sách</a></li>
-             <li><a href="#" class="text-theme-secondary hover:text-brand transition-colors text-sm">Bản Quyền</a></li>
-             <li><a href="#" class="text-theme-secondary hover:text-brand transition-colors text-sm">Liên Hệ</a></li>
+          <h3 class="font-bold text-white mb-6 uppercase tracking-wider text-xs">Hỗ Trợ</h3>
+          <ul class="space-y-4">
+            <li><a href="#" class="text-gray-400 hover:text-red-500 transition-colors">FAQ</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-red-500 transition-colors">DMCA</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-red-500 transition-colors">Liên Hệ Quảng Cáo</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-red-500 transition-colors">Báo Lỗi</a></li>
           </ul>
         </div>
 
-        <!-- Newsletter -->
+        <!-- Column 4: Newsletter -->
         <div>
-          <h4 class="text-theme-primary font-bold mb-6 text-lg">Nhận Thông Báo</h4>
-          <div class="flex">
+          <h3 class="font-bold text-white mb-6 uppercase tracking-wider text-xs">Đăng Ký Nhận Tin</h3>
+           <p class="text-gray-400 mb-4 text-xs">Nhận thông báo về phim mới hot nhất.</p>
+          <div class="relative">
             <input 
               type="email" 
-              placeholder="Email của bạn..." 
-              class="flex-1 px-4 py-2.5 bg-theme-secondary/10 border border-theme rounded-l-lg text-sm text-theme-primary focus:border-brand"
-            />
-            <button class="px-5 py-2.5 bg-brand text-white rounded-r-xl hover:bg-brand-hover shadow-md transition-all ripple">
-              <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-              </svg>
+              placeholder="Email của bạn"
+              class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-red-600 transition-colors"
+            >
+            <button class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-white">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </button>
           </div>
         </div>
+
       </div>
 
-      <!-- Divider - Solid -->
-      <div class="h-px bg-gray-800 mb-8"></div>
-      <div class="border-t border-theme pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-theme-muted">
-        <div>© {{ new Date().getFullYear() }} Phim Chùa. All rights reserved.</div>
-        <div class="flex gap-4">
-          <a href="#" class="hover:text-brand transition-colors">Privacy</a>
-          <a href="#" class="hover:text-brand transition-colors">Terms</a>
+      <!-- Bottom Bar -->
+      <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-gray-500 text-xs">
+          © {{ new Date().getFullYear() }} Phim Chùa. Mọi bản quyền đều là của gió bay.
+        </p>
+        <div class="flex gap-6 text-xs text-gray-500">
+          <a href="#" class="hover:text-white transition-colors">Điều khoản sử dụng</a>
+          <a href="#" class="hover:text-white transition-colors">Chính sách quyền riêng tư</a>
         </div>
       </div>
     </div>
