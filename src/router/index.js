@@ -55,14 +55,26 @@ const routes = [
         component: () => import("../views/CategoryView.vue"),
     },
     {
+        path: "/danh-sach/:slug",
+        redirect: to => ({ name: 'CategoryView', params: { slug: to.params.slug } })
+    },
+    {
         path: "/genre/:slug",
         name: "GenreView",
         component: () => import("../views/GenreWrapper.vue"),
     },
     {
+        path: "/the-loai/:slug",
+        redirect: to => ({ name: 'GenreView', params: { slug: to.params.slug } })
+    },
+    {
         path: "/country/:slug",
         name: "CountryView",
         component: () => import("../views/CountryWrapper.vue"),
+    },
+    {
+        path: "/quoc-gia/:slug",
+        redirect: to => ({ name: 'CountryView', params: { slug: to.params.slug } })
     },
     {
         path: "/watch/:slug",

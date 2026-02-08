@@ -16,10 +16,9 @@
         ref="searchInput"
         v-model="searchQuery"
         @input="handleInput"
-        @keyup.enter="goToSearchPage"
         @blur="handleBlur"
         type="text"
-        placeholder="Tìm kiếm phim..."
+        :placeholder="placeholder"
         class="search-input-field"
       />
       <button @click="closeSearch" class="close-btn" aria-label="Close">
@@ -97,6 +96,13 @@ import { useMovieStore } from '../stores/movieStore'
 
 const router = useRouter()
 const movieStore = useMovieStore()
+
+const props = defineProps({
+  placeholder: {
+    type: String,
+    default: 'Tìm kiếm phim...'
+  }
+})
 
 const isSearchOpen = ref(false)
 const searchQuery = ref('')

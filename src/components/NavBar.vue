@@ -1,476 +1,271 @@
 <template>
-  <div class="navbar-wrapper">
-    <div class="navbar-container">
-      <nav class="navbar-content">
-        <!-- Logo -->
-        <router-link to="/" class="logo">
-          <span class="logo-text">Phim Chùa Premium</span>
+  <nav :class="[
+    'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+    isScrolled ? 'bg-black/95 backdrop-blur-xl border-b border-white/5 shadow-lg' : 'bg-transparent border-b border-transparent'
+  ]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center h-16 gap-6">
+        <!-- LOGO -->
+        <router-link to="/" class="group shrink-0">
+          <div class="flex flex-col">
+            <span class="text-2xl font-black text-red-600 tracking-tighter hover:text-red-500 transition-colors duration-300">
+              PHIM CHÙA
+            </span>
+          </div>
         </router-link>
 
         <!-- Desktop Navigation -->
-        <ul class="desktop-nav">
-          <li>
-            <router-link to="/" class="nav-item">Trang chủ</router-link>
-          </li>
-          <li>
-            <router-link to="/movies" class="nav-item">Phim Lẻ</router-link>
-          </li>
-          <li>
-            <router-link to="/series" class="nav-item">Phim Bộ</router-link>
-          </li>
-          <li>
-            <router-link to="/animation" class="nav-item">Hoạt Hình</router-link>
-          </li>
-          
-          <!-- Thể Loại Dropdown -->
-          <li class="dropdown-container" @mouseenter="showGenres = true" @mouseleave="showGenres = false">
-            <button class="nav-item dropdown-trigger">
-              <span>Thể Loại</span>
-              <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </button>
-            <transition name="dropdown-fade">
-              <div v-if="showGenres" class="dropdown-menu">
-                <router-link v-for="genre in popularGenres" :key="genre.slug" 
-                  :to="`/genre/${genre.slug}`" 
-                  class="dropdown-item"
-                  @click="showGenres = false">
-                  {{ genre.name }}
-                </router-link>
-              </div>
-            </transition>
-          </li>
+        <div class="hidden lg:flex items-center gap-1">
+          <router-link
+            v-for="item in mainMenuItems"
+            :key="item.link"
+            :to="item.link"
+            class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+            active-class="text-white bg-white/10"
+          >
+            {{ item.name }}
+          </router-link>
 
-          <!-- Quốc Gia Dropdown -->
-          <li class="dropdown-container" @mouseenter="showCountries = true" @mouseleave="showCountries = false">
-            <button class="nav-item dropdown-trigger">
-              <span>Quốc Gia</span>
-              <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </button>
-            <transition name="dropdown-fade">
-              <div v-if="showCountries" class="dropdown-menu">
-                <router-link v-for="country in popularCountries" :key="country.slug"
-                  :to="`/country/${country.slug}`"
-                  class="dropdown-item"
-                  @click="showCountries = false">
-                  {{ country.name }}
-                </router-link>
+          <!-- Dropdowns -->
+          <div class="flex items-center gap-1 ml-1">
+            <div class="w-px h-4 bg-white/10 mx-2"></div>
+            
+            <!-- Thể Loại -->
+            <div class="relative group">
+              <button class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200">
+                <span>Thể Loại</span>
+                <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0">
+                <div class="w-96 p-4 bg-[#111] border border-white/10 rounded-xl shadow-2xl grid grid-cols-3 gap-2">
+                  <router-link
+                    v-for="genre in genres"
+                    :key="genre.slug"
+                    :to="genre.link"
+                    class="px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-colors text-center"
+                    active-class="text-red-500 bg-red-500/10"
+                  >
+                    {{ genre.name }}
+                  </router-link>
+                </div>
               </div>
-            </transition>
-          </li>
-        </ul>
+            </div>
 
-        <!-- Right Actions -->
-        <div class="nav-actions">
-          <SearchBox />
+            <!-- Quốc Gia -->
+            <div class="relative group">
+              <button class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200">
+                <span>Quốc Gia</span>
+                <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0">
+                <div class="w-48 p-4 bg-[#111] border border-white/10 rounded-xl shadow-2xl flex flex-col gap-1">
+                  <router-link
+                    v-for="country in countries"
+                    :key="country.slug"
+                    :to="country.link"
+                    class="px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                    active-class="text-red-500 bg-red-500/10"
+                  >
+                    {{ country.name }}
+                  </router-link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spacer -->
+        <div class="flex-1"></div>
+
+        <!-- Right Side: Search & Theme -->
+        <div class="hidden lg:flex items-center gap-4">
+          <div class="w-64 transition-all duration-300 focus-within:w-80">
+             <SearchBox placeholder="Tìm kiếm phim..." />
+          </div>
           
-          <!-- Mobile Menu Button -->
-          <button @click="toggleMobileMenu" class="mobile-menu-btn">
-            <svg v-if="!isMobileMenuOpen" class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          <button 
+            @click="toggleTheme" 
+            class="w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center text-gray-400 hover:text-yellow-400 transition-colors"
+          >
+            <svg v-if="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            <svg v-else class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
         </div>
-      </nav>
+
+        <!-- Mobile Menu Button -->
+        <button
+          @click="toggleMobileMenu"
+          class="lg:hidden ml-auto p-2 text-gray-400 hover:text-white transition-colors"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path v-if="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile Menu -->
-    <transition name="mobile-slide">
-      <div v-if="isMobileMenuOpen" class="mobile-menu">
-        <div class="mobile-menu-content">
-          <router-link to="/" @click="closeMobileMenu" class="mobile-nav-item">Trang chủ</router-link>
-          <router-link to="/movies" @click="closeMobileMenu" class="mobile-nav-item">Phim Lẻ</router-link>
-          <router-link to="/series" @click="closeMobileMenu" class="mobile-nav-item">Phim Bộ</router-link>
-          <router-link to="/animation" @click="closeMobileMenu" class="mobile-nav-item">Hoạt Hình</router-link>
-          
-          <!-- Mobile Genres -->
-          <div class="mobile-section">
-            <div class="mobile-section-title">Thể Loại</div>
-            <div class="mobile-section-grid">
-              <router-link v-for="genre in popularGenres.slice(0, 8)" :key="genre.slug"
-                :to="`/genre/${genre.slug}`"
-                @click="closeMobileMenu"
-                class="mobile-section-item">
-                {{ genre.name }}
-              </router-link>
-            </div>
+    <transition
+      enter-active-class="transition-all duration-300 ease-out"
+      enter-from-class="opacity-0 -translate-y-4"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition-all duration-200 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-4"
+    >
+      <div v-show="isMobileMenuOpen" class="lg:hidden bg-[#111] border-t border-white/10">
+        <div class="px-4 py-6 space-y-6">
+          <!-- Search Mobile -->
+          <div class="relative">
+             <SearchBox placeholder="Tìm kiếm phim..." class="w-full" />
           </div>
 
-          <!-- Mobile Countries -->
-          <div class="mobile-section">
-            <div class="mobile-section-title">Quốc Gia</div>
-            <div class="mobile-section-grid">
-              <router-link v-for="country in popularCountries" :key="country.slug"
-                :to="`/country/${country.slug}`"
-                @click="closeMobileMenu"
-                class="mobile-section-item">
-                {{ country.name }}
-              </router-link>
+          <div class="space-y-1">
+            <router-link
+              v-for="item in mainMenuItems"
+              :key="item.link"
+              :to="item.link"
+              @click="closeMobileMenu"
+              class="block px-4 py-3 rounded-xl text-base font-semibold text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              active-class="text-red-500 bg-red-500/10"
+            >
+              {{ item.name }}
+            </router-link>
+          </div>
+
+          <div class="border-t border-white/10 pt-6">
+            <div class="grid grid-cols-2 gap-8">
+              <div>
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Thể Loại</h3>
+                <div class="space-y-2">
+                  <router-link
+                    v-for="genre in genres.slice(0, 5)"
+                    :key="genre.slug"
+                    :to="genre.link"
+                    @click="closeMobileMenu"
+                    class="block text-sm text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    {{ genre.name }}
+                  </router-link>
+                </div>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Quốc Gia</h3>
+                 <div class="space-y-2">
+                  <router-link
+                    v-for="country in countries"
+                    :key="country.slug"
+                    :to="country.link"
+                    @click="closeMobileMenu"
+                    class="block text-sm text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    {{ country.name }}
+                  </router-link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </transition>
-
-    <!-- Mobile Overlay -->
-    <transition name="fade">
-      <div v-if="isMobileMenuOpen" @click="closeMobileMenu" class="mobile-overlay"></div>
-    </transition>
-  </div>
+  </nav>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import SearchBox from './SearchBox.vue'
 
-const showGenres = ref(false)
-const showCountries = ref(false)
 const isMobileMenuOpen = ref(false)
+const isDark = ref(true)
+const isScrolled = ref(false)
 
-const popularGenres = [
-  { name: 'Hành Động', slug: 'hanh-dong' },
-  { name: 'Tình Cảm', slug: 'tinh-cam' },
-  { name: 'Hài Hước', slug: 'hai-huoc' },
-  { name: 'Kinh Dị', slug: 'kinh-di' },
-  { name: 'Viễn Tưởng', slug: 'vien-tuong' },
-  { name: 'Phiêu Lưu', slug: 'phieu-luu' },
-  { name: 'Tâm Lý', slug: 'tam-ly' },
-  { name: 'Hình Sự', slug: 'hinh-su' },
-  { name: 'Chiến Tranh', slug: 'chien-tranh' },
-  { name: 'Thần Thoại', slug: 'than-thoai' },
-  { name: 'Khoa Học', slug: 'khoa-hoc' },
-  { name: 'Võ Thuật', slug: 'vo-thuat' },
-  { name: 'Âm Nhạc', slug: 'am-nhac' },
-  { name: 'Thể Thao', slug: 'the-thao' },
-  { name: 'Gia Đình', slug: 'gia-dinh' },
-  { name: 'Học Đường', slug: 'hoc-duong' }
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 20
+}
+
+const mainMenuItems = [
+  { name: 'Trang chủ', link: '/' },
+  { name: 'Phim Bộ', link: '/danh-sach/phim-bo' },
+  { name: 'Phim Lẻ', link: '/danh-sach/phim-le' },
+  { name: 'Hoạt Hình', link: '/danh-sach/hoat-hinh' },
+  { name: 'TV Shows', link: '/danh-sach/tv-shows' }
 ]
 
-const popularCountries = [
-  { name: 'Hàn Quốc', slug: 'han-quoc' },
-  { name: 'Trung Quốc', slug: 'trung-quoc' },
-  { name: 'Nhật Bản', slug: 'nhat-ban' },
-  { name: 'Thái Lan', slug: 'thai-lan' },
-  { name: 'Âu Mỹ', slug: 'au-my' },
-  { name: 'Việt Nam', slug: 'viet-nam' },
-  { name: 'Hồng Kông', slug: 'hong-kong' },
-  { name: 'Ấn Độ', slug: 'an-do' },
-  { name: 'Đài Loan', slug: 'dai-loan' },
-  { name: 'Anh', slug: 'anh' },
-  { name: 'Pháp', slug: 'phap' },
-  { name: 'Canada', slug: 'canada' },
-  { name: 'Philippines', slug: 'philippines' },
-  { name: 'Đức', slug: 'duc' }
+const genres = [
+  { name: 'Hành Động', link: '/the-loai/hanh-dong', slug: 'hanh-dong' },
+  { name: 'Tình Cảm', link: '/the-loai/tinh-cam', slug: 'tinh-cam' },
+  { name: 'Hài Hước', link: '/the-loai/hai-huoc', slug: 'hai-huoc' },
+  { name: 'Cổ Trang', link: '/the-loai/co-trang', slug: 'co-trang' },
+  { name: 'Tâm Lý', link: '/the-loai/tam-ly', slug: 'tam-ly' },
+  { name: 'Hình Sự', link: '/the-loai/hinh-su', slug: 'hinh-su' },
+  { name: 'Kinh Dị', link: '/the-loai/kinh-di', slug: 'kinh-di' },
+  { name: 'Võ Thuật', link: '/the-loai/vo-thuat', slug: 'vo-thuat' }
 ]
+
+const countries = [
+  { name: 'Trung Quốc', link: '/quoc-gia/trung-quoc', slug: 'trung-quoc' },
+  { name: 'Hàn Quốc', link: '/quoc-gia/han-quoc', slug: 'han-quoc' },
+  { name: 'Nhật Bản', link: '/quoc-gia/nhat-ban', slug: 'nhat-ban' },
+  { name: 'Thái Lan', link: '/quoc-gia/thai-lan', slug: 'thai-lan' },
+  { name: 'Âu Mỹ', link: '/quoc-gia/au-my', slug: 'au-my' },
+  { name: 'Việt Nam', link: '/quoc-gia/viet-nam', slug: 'viet-nam' }
+]
+
+function toggleTheme() {
+  isDark.value = !isDark.value
+  if (isDark.value) {
+    document.documentElement.classList.add('dark')
+    localStorage.setItem('theme', 'dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+    localStorage.setItem('theme', 'light')
+  }
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('theme')
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    isDark.value = true
+    document.documentElement.classList.add('dark')
+  } else {
+    isDark.value = false
+    document.documentElement.classList.remove('dark')
+  }
+}
 
 function toggleMobileMenu() {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
+  if (isMobileMenuOpen.value) document.body.style.overflow = 'hidden'
+  else document.body.style.overflow = ''
 }
 
 function closeMobileMenu() {
   isMobileMenuOpen.value = false
+  document.body.style.overflow = ''
 }
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+  initTheme()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  document.body.style.overflow = ''
+})
 </script>
 
 <style scoped>
-.navbar-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  background-color: #0F1419;
-  border-bottom: 1px solid #374151;
-}
-
-.navbar-container {
-  max-width: 1536px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-.navbar-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 64px;
-}
-
-/* Logo */
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #F59E0B;
-  text-decoration: none;
-  transition: color 0.2s;
-  flex-shrink: 0;
-}
-
-.logo:hover {
-  color: #FBBF24;
-}
-
-/* Desktop Navigation */
-.desktop-nav {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  flex: 1;
-  justify-content: center;
-}
-
-@media (min-width: 1024px) {
-  .desktop-nav {
-    display: flex;
-  }
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 16px;
-  color: #E5E7EB;
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.2s;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.nav-item:hover {
-  color: #F59E0B;
-  background-color: #1A1F26;
-}
-
-.nav-item.router-link-active {
-  color: #F59E0B;
-  background-color: rgba(245, 158, 11, 0.1);
-}
-
-/* Dropdown */
-.dropdown-container {
-  position: relative;
-}
-
-.dropdown-trigger {
-  font-family: inherit;
-}
-
-.dropdown-icon {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.2s;
-}
-
-.dropdown-container:hover .dropdown-icon {
-  transform: rotate(180deg);
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 200px;
-  margin-top: 8px;
-  padding: 8px;
-  background-color: #1A1F26;
-  border: 1px solid #374151;
-  border-radius: 12px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
-  z-index: 60;
-}
-
-.dropdown-item {
-  padding: 8px 12px;
-  color: #E5E7EB;
-  text-decoration: none;
-  font-size: 14px;
-  border-radius: 6px;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.dropdown-item:hover {
-  background-color: #252D36;
-  color: #F59E0B;
-}
-
-/* Nav Actions */
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.mobile-menu-btn {
-  display: flex;
-  align-items: center;
-  justify-center: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background-color: #1A1F26;
-  border: none;
-  color: #E5E7EB;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.mobile-menu-btn:hover {
-  background-color: #F59E0B;
-  color: #0F1419;
-}
-
-@media (min-width: 1024px) {
-  .mobile-menu-btn {
-    display: none;
-  }
-}
-
-.menu-icon {
-  width: 24px;
-  height: 24px;
-}
-
-/* Mobile Menu */
-.mobile-menu {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #0F1419;
-  overflow-y: auto;
-  z-index: 49;
-}
-
-.mobile-menu-content {
-  padding: 16px;
-}
-
-.mobile-nav-item {
-  display: block;
-  padding: 12px 16px;
-  color: #E5E7EB;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.2s;
-  margin-bottom: 4px;
-}
-
-.mobile-nav-item:hover,
-.mobile-nav-item.router-link-active {
-  background-color: #1A1F26;
-  color: #F59E0B;
-}
-
-.mobile-section {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #374151;
-}
-
-.mobile-section-title {
-  color: #F59E0B;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.mobile-section-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.mobile-section-item {
-  padding: 10px 12px;
-  color: #E5E7EB;
-  text-decoration: none;
-  font-size: 14px;
-  border-radius: 6px;
-  background-color: #1A1F26;
-  text-align: center;
-  transition: all 0.2s;
-}
-
-.mobile-section-item:hover {
-  background-color: #252D36;
-  color: #F59E0B;
-}
-
-.mobile-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  z-index: 48;
-}
-
-/* Transitions */
-.dropdown-fade-enter-active,
-.dropdown-fade-leave-active {
-  transition: all 0.2s ease;
-}
-
-.dropdown-fade-enter-from,
-.dropdown-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-.mobile-slide-enter-active,
-.mobile-slide-leave-active {
-  transition: all 0.3s ease;
-}
-
-.mobile-slide-enter-from,
-.mobile-slide-leave-to {
-  transform: translateX(100%);
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-@media (min-width: 768px) {
-  .navbar-container {
-    padding: 0 24px;
-  }
-  
-  .navbar-content {
-    height: 72px;
-  }
-  
-  .mobile-menu {
-    top: 72px;
-  }
-}
+/* Scoped styles can remain empty or minimal */
 </style>

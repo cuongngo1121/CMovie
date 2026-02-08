@@ -80,76 +80,11 @@
           class="group cursor-pointer"
           @click="goToMovieDetails(movie)"
         >
-          <!-- Movie card with clean design -->
-          <div class="relative bg-bg-card rounded-2xl overflow-hidden border border-border hover:border-secondary transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-secondary/10">
-            
-            <!-- Movie poster container -->
-            <div class="relative overflow-hidden aspect-[2/3]">
-              <img
-                :src="getImageUrl(movie.thumb_url)"
-                :alt="movie.name"
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                :loading="index < 5 ? 'eager' : 'lazy'"
-                @error="handleImageError"
-              />
-              
-              <!-- Simple dark overlay -->
-              <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              
-              <!-- Play button overlay -->
-              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                <div class="w-12 h-12 md:w-16 md:h-16 bg-secondary rounded-full flex items-center justify-center hover:bg-secondary-light transition-colors duration-200 hover:scale-110 play-button text-primary-dark">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6 ml-1">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                </div>
-              </div>
-              
-              <!-- Quality badge -->
-              <div class="absolute top-2 left-2 md:top-3 md:left-3 px-1.5 py-0.5 md:px-2 md:py-1 bg-secondary rounded-md text-[10px] md:text-xs font-bold text-primary-dark">
-                {{ movie.quality || 'HD' }}
-              </div>
-              
-              <!-- Year badge -->
-              <div class="absolute top-2 right-2 md:top-3 md:right-3 px-1.5 py-0.5 md:px-2 md:py-1 bg-black/60 backdrop-blur-sm rounded-md text-[10px] md:text-xs font-medium">
-                {{ movie.year || 'N/A' }}
-              </div>
-
-              <!-- Episode count badge for series -->
-              <div v-if="movie.episode_current && movie.episode_current !== 'Full'" 
-                   class="absolute bottom-2 left-2 md:bottom-3 md:left-3 px-1.5 py-0.5 md:px-2 md:py-1 bg-success/90 backdrop-blur-sm rounded-md text-[10px] md:text-xs font-bold">
-                {{ movie.episode_current === 'Hoàn Tất' ? 'Full' : `Tập ${movie.episode_current}` }}
-              </div>
-            </div>
-
-            <!-- Movie info section -->
-            <div class="p-3 md:p-4 space-y-1 md:space-y-2">
-              <h3 class="text-sm md:text-base font-bold text-primary group-hover:text-secondary transition-colors duration-300 line-clamp-2 leading-tight min-h-[2.5em]">
-                {{ movie.name }}
-              </h3>
-              
-              <p class="text-xs md:text-sm text-text-muted group-hover:text-text-secondary transition-colors duration-300 line-clamp-1">
-                {{ movie.origin_name }}
-              </p>
-              
-              <!-- Rating and additional info -->
-              <div class="flex items-center justify-between pt-1 md:pt-2">
-                <div class="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-3 h-3 md:w-4 md:h-4 text-secondary">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                  <span class="text-[10px] md:text-xs text-text-muted">{{ movie.tmdb?.vote_average || '8.0' }}</span>
-                </div>
-                
-                <div class="flex items-center gap-1 text-[10px] md:text-xs text-text-muted">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                  </svg>
-                  <span>{{ movie.time || '120m' }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <MovieCard 
+            :movie="movie" 
+            class="h-full"
+            @click="goToMovieDetails(movie)"
+          />
         </swiper-slide>
 
         <!-- Custom navigation buttons with unique IDs -->
@@ -179,6 +114,7 @@ import { onMounted, computed, ref } from 'vue';
 import { useMovieStore } from '../stores/movieStore';
 import { useRouter } from 'vue-router';
 import SkeletonCard from './SkeletonCard.vue';
+import MovieCard from './MovieCard.vue';
 
 const router = useRouter();
 const movieStore = useMovieStore();

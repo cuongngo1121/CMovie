@@ -1,72 +1,102 @@
 <template>
-  <div class="filters-container bg-bg-card border border-border rounded-xl p-4 md:p-6 mb-8">
-    <div class="flex flex-col md:flex-row md:items-center gap-4">
-      <!-- Year Filter -->
-      <div class="flex-1">
-        <label class="text-text-muted text-sm mb-2 block">Năm</label>
-        <select 
-          v-model="localFilters.year"
-          @change="emitFilters"
-          class="w-full bg-bg-elevated text-primary border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:border-secondary transition-colors"
-        >
-          <option value="">Tất cả</option>
-          <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-        </select>
+  <div class="filters-container bg-[#1a1a1a]/80 backdrop-blur-md border border-white/10 rounded-xl p-6 mb-8 shadow-xl animate-fade-in-up">
+    <div class="flex flex-col gap-6">
+      <!-- Filter Controls Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Year Filter -->
+        <div class="flex-1 group">
+          <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Năm phát hành</label>
+          <div class="relative">
+            <select 
+              v-model="localFilters.year"
+              class="w-full bg-black/50 text-white border border-white/10 rounded-lg px-4 py-3 appearance-none focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all duration-300 cursor-pointer hover:bg-black/70"
+            >
+              <option value="" class="bg-[#1a1a1a] text-white">Tất cả năm</option>
+              <option v-for="year in years" :key="year" :value="year" class="bg-[#1a1a1a] text-white">{{ year }}</option>
+            </select>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Country Filter -->
+        <div class="flex-1 group">
+          <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Quốc gia</label>
+          <div class="relative">
+            <select 
+              v-model="localFilters.country"
+              class="w-full bg-black/50 text-white border border-white/10 rounded-lg px-4 py-3 appearance-none focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all duration-300 cursor-pointer hover:bg-black/70"
+            >
+              <option value="" class="bg-[#1a1a1a] text-white">Tất cả quốc gia</option>
+              <option v-for="country in countries" :key="country.slug" :value="country.slug" class="bg-[#1a1a1a] text-white">
+                {{ country.name }}
+              </option>
+            </select>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Genre Filter -->
+        <div v-if="showGenre" class="flex-1 group">
+          <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Thể loại phim</label>
+          <div class="relative">
+            <select 
+              v-model="localFilters.genre"
+              class="w-full bg-black/50 text-white border border-white/10 rounded-lg px-4 py-3 appearance-none focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all duration-300 cursor-pointer hover:bg-black/70"
+            >
+              <option value="" class="bg-[#1a1a1a] text-white">Tất cả thể loại</option>
+              <option v-for="genre in genres" :key="genre.slug" :value="genre.slug" class="bg-[#1a1a1a] text-white">
+                {{ genre.name }}
+              </option>
+            </select>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sort Filter -->
+        <div class="flex-1 group">
+          <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Sắp xếp theo</label>
+          <div class="relative">
+            <select 
+              v-model="localFilters.sort"
+              class="w-full bg-black/50 text-white border border-white/10 rounded-lg px-4 py-3 appearance-none focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all duration-300 cursor-pointer hover:bg-black/70"
+            >
+              <option value="latest" class="bg-[#1a1a1a] text-white">Mới cập nhật</option>
+              <option value="year" class="bg-[#1a1a1a] text-white">Năm phát hành</option>
+              <option value="name" class="bg-[#1a1a1a] text-white">Tên phim (A-Z)</option>
+            </select>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Country Filter -->
-      <div class="flex-1">
-        <label class="text-text-muted text-sm mb-2 block">Quốc gia</label>
-        <select 
-          v-model="localFilters.country"
-          @change="emitFilters"
-          class="w-full bg-bg-elevated text-primary border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:border-secondary transition-colors"
-        >
-          <option value="">Tất cả</option>
-          <option v-for="country in countries" :key="country.slug" :value="country.slug">
-            {{ country.name }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Genre Filter (optional) -->
-      <div v-if="showGenre" class="flex-1">
-        <label class="text-text-muted text-sm mb-2 block">Thể loại</label>
-        <select 
-          v-model="localFilters.genre"
-          @change="emitFilters"
-          class="w-full bg-bg-elevated text-primary border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:border-secondary transition-colors"
-        >
-          <option value="">Tất cả</option>
-          <option v-for="genre in genres" :key="genre.slug" :value="genre.slug">
-            {{ genre.name }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Sort Filter -->
-      <div class="flex-1">
-        <label class="text-text-muted text-sm mb-2 block">Sắp xếp</label>
-        <select 
-          v-model="localFilters.sort"
-          @change="emitFilters"
-          class="w-full bg-bg-elevated text-primary border border-border rounded-lg px-4 py-2.5 focus:outline-none focus:border-secondary transition-colors"
-        >
-          <option value="latest">Mới nhất</option>
-          <option value="year">Năm phát hành</option>
-          <option value="name">Tên A-Z</option>
-        </select>
-      </div>
-
-      <!-- Reset Button -->
-      <div class="flex items-end">
+      <!-- Action Buttons Row -->
+      <div class="flex items-center gap-4 justify-end pt-2 border-t border-white/5 mt-2">
         <button 
           @click="resetFilters"
-          class="px-4 py-2.5 bg-bg-elevated hover:bg-secondary hover:text-primary-dark text-text-secondary border border-border hover:border-secondary rounded-lg transition-all duration-200 font-medium"
+          class="px-6 py-3 bg-transparent hover:bg-white/5 text-gray-400 hover:text-white border border-white/10 hover:border-white/30 rounded-xl transition-all duration-300 font-medium flex items-center gap-2 group"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 transition-transform duration-300 group-hover:-rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
+          Đặt lại
+        </button>
+
+        <button 
+          @click="applyFilters"
+          class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white border-0 rounded-xl transition-all duration-300 font-bold flex items-center gap-2 shadow-lg hover:shadow-red-600/30 hover:-translate-y-0.5 group"
+        >
+          <svg class="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          Lọc Phim
         </button>
       </div>
     </div>
@@ -74,7 +104,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { reactive, watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -133,7 +163,7 @@ const genres = [
   { name: 'Học Đường', slug: 'hoc-duong' }
 ]
 
-function emitFilters() {
+function applyFilters() {
   emit('update:modelValue', { ...localFilters })
   emit('filter-change', { ...localFilters })
 }
@@ -143,7 +173,7 @@ function resetFilters() {
   localFilters.country = ''
   localFilters.genre = ''
   localFilters.sort = 'latest'
-  emitFilters()
+  applyFilters()
 }
 
 // Watch for external changes
@@ -153,17 +183,26 @@ watch(() => props.modelValue, (newVal) => {
 </script>
 
 <style scoped>
-select {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F59E0B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1.25rem;
-  padding-right: 2.5rem;
+/* Custom Fade In Animation */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
 }
 
-select:focus {
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ensure background is dark for option elements */
+select option {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 8px;
 }
 </style>

@@ -129,9 +129,13 @@ async function loadCategory(slug) {
   loading.value = true
   categoryTitle.value = categoryNames[slug] || slug
   try {
-    await movieStore.getMoviesByCategory(slug)
-    const data = movieStore.moviesByCategory[slug]
-    movies.value = data?.items || []
+    // Load ALL movies from all pages
+    const allMovies = await movieStore.getAllMoviesByCategory(slug)
+    movies.value = allMovies
+    console.log(`✅ Loaded ${allMovies.length} movies for ${slug}`)
+  } catch (error) {
+    console.error(`❌ Error loading category ${slug}:`, error)
+    movies.value = []
   } finally {
     loading.value = false
   }
@@ -188,7 +192,13 @@ const paginatedMovies = computed(() => {
   return filteredMovies.value.slice(start, end)
 })
 
-function applyFilters() {
+function applyFilters(newFilters) {
+  console.log('Applying filters:', newFilters)
+  // Update each filter property individually to maintain reactivity
+  filters.year = newFilters.year
+  filters.country = newFilters.country
+  filters.genre = newFilters.genre
+  filters.sort = newFilters.sort
   currentPage.value = 1
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }

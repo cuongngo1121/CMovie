@@ -1,121 +1,87 @@
 <template>
-  <footer class="bg-primary-dark text-white py-10 px-6 mt-20">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Logo & Description -->
-      <div>
-        <h3 class="text-xl font-bold mb-2">🎬 Phim Chùa Premium</h3>
-        <p class="text-sm text-gray-400">
-          Nơi cập nhật phim mới nhất, nhanh nhất và chất lượng cao. Cùng khám phá thế giới điện ảnh!
-        </p>
+  <footer class="mt-20 border-t border-theme bg-theme-primary pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
+        <!-- Brand Section -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+             <div class="relative w-12 h-12">
+               <!-- Temple Icon (Footer Version) -->
+              <svg viewBox="0 0 512 512" class="w-full h-full text-brand" xmlns="http://www.w3.org/2000/svg">
+                <path d="M256 32L32 160h448L256 32z" fill="#E50914"/>
+                <path d="M480 160H32v32h448v-32z" fill="#B20710"/>
+                <path d="M64 192h64v256H64zM384 192h64v256h-64z" fill="#E50914" opacity="0.8"/>
+                <path d="M192 224V416L352 320L192 224Z" fill="#FFD700"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl md:text-2xl font-black text-brand">PHIM CHÙA</h3>
+              <p class="text-xs text-brand font-medium italic">"Chùa miễn phí - Phim hết ý"</p>
+            </div>
+          </div>
+          
+          <p class="text-sm text-theme-secondary leading-relaxed">
+            Xem phim trực tuyến miễn phí chất lượng cao. Cập nhật liên tục mỗi ngày.
+          </p>
+          
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 rounded-full border border-theme flex items-center justify-center text-theme-secondary hover:text-brand hover:border-brand transition-colors" aria-label="Facebook">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full border border-theme flex items-center justify-center text-theme-secondary hover:text-brand hover:border-brand transition-colors" aria-label="Instagram">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <h4 class="text-theme-primary font-bold mb-6 text-lg">Danh Mục</h4>
+          <ul class="space-y-3">
+            <li><router-link to="/danh-sach/phim-le" class="text-theme-secondary hover:text-brand transition-colors text-sm">Phim Lẻ</router-link></li>
+            <li><router-link to="/danh-sach/phim-bo" class="text-theme-secondary hover:text-brand transition-colors text-sm">Phim Bộ</router-link></li>
+            <li><router-link to="/danh-sach/hoat-hinh" class="text-theme-secondary hover:text-brand transition-colors text-sm">Hoạt Hình</router-link></li>
+            <li><router-link to="/danh-sach/tv-shows" class="text-theme-secondary hover:text-brand transition-colors text-sm">TV Shows</router-link></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-theme-primary font-bold mb-6 text-lg">Hỗ Trợ</h4>
+          <ul class="space-y-3">
+             <li><a href="#" class="text-theme-secondary hover:text-brand transition-colors text-sm">Điều Khoản</a></li>
+             <li><a href="#" class="text-theme-secondary hover:text-brand transition-colors text-sm">Chính Sách</a></li>
+             <li><a href="#" class="text-theme-secondary hover:text-brand transition-colors text-sm">Bản Quyền</a></li>
+             <li><a href="#" class="text-theme-secondary hover:text-brand transition-colors text-sm">Liên Hệ</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div>
+          <h4 class="text-theme-primary font-bold mb-6 text-lg">Nhận Thông Báo</h4>
+          <div class="flex">
+            <input 
+              type="email" 
+              placeholder="Email của bạn..." 
+              class="flex-1 px-4 py-2.5 bg-theme-secondary/10 border border-theme rounded-l-lg text-sm text-theme-primary focus:border-brand"
+            />
+            <button class="px-5 py-2.5 bg-brand text-white rounded-r-xl hover:bg-brand-hover shadow-md transition-all ripple">
+              <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
 
-      <!-- Navigation Links -->
-      <div>
-        <h4 class="text-lg font-semibold mb-3">Danh mục</h4>
-        <ul class="space-y-2 text-sm text-gray-300">
-          <li><a href="/" class="hover:text-white">Trang chủ</a></li>
-          <li><a href="/category/phim-le" class="hover:text-white">Phim lẻ</a></li>
-          <li><a href="/category/phim-bo" class="hover:text-white">Phim bộ</a></li>
-          <li><a href="/category/phim-chieu-rap" class="hover:text-white">Phim chiếu rạp</a></li>
-        </ul>
-      </div>
-
-      <!-- Social Connect -->
-      <div class="fui-connect-social">
-        <h4 class="text-lg font-semibold mb-3">Kết nối với chúng tôi</h4>
-        <ul class="social-list">
-  <li class="social-item">
-    <a href="https://www.facebook.com/" class="social-link" title="Facebook">
-      <div class="icon">
-        <i class="fab fa-facebook-f"></i>
-      </div>
-      <span class="text">Facebook</span>
-    </a>
-  </li>
-  <li class="social-item">
-    <a href="https://www.instagram.com/" class="social-link" title="Instagram">
-      <div class="icon">
-        <i class="fab fa-instagram"></i>
-      </div>
-      <span class="text">Instagram</span>
-    </a>
-  </li>
-  <li class="social-item">
-    <a href="https://www.youtube.com/" class="social-link" title="YouTube">
-      <div class="icon">
-        <i class="fab fa-youtube"></i>
-      </div>
-      <span class="text">YouTube</span>
-    </a>
-  </li>
-</ul>
-
+      <!-- Divider - Solid -->
+      <div class="h-px bg-gray-800 mb-8"></div>
+      <div class="border-t border-theme pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-theme-muted">
+        <div>© {{ new Date().getFullYear() }} Phim Chùa. All rights reserved.</div>
+        <div class="flex gap-4">
+          <a href="#" class="hover:text-brand transition-colors">Privacy</a>
+          <a href="#" class="hover:text-brand transition-colors">Terms</a>
+        </div>
       </div>
     </div>
-    <p class="text-center text-sm text-gray-500 mt-10">© 2025 Phim Chùa Premium. All rights reserved.</p>
   </footer>
 </template>
-
-<script setup>
-// Không cần JS cho phần footer này
-</script>
-
-<style scoped>
-.fui-connect-social .social-list {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.fui-connect-social .social-link {
-  display: flex;
-  align-items: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 100rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-out;
-  overflow: hidden;
-  cursor: pointer;
-}
-.fui-connect-social .icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 100rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease-out;
-}
-.fui-connect-social .text {
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: 10px;
-  line-height: 60px;
-  display: none;
-  transition: all 0.3s ease-out;
-}
-.social-item:hover .social-link {
-  width: 200px;
-}
-.social-item:hover .text {
-  display: block;
-}
-.social-item:nth-child(1):hover .text {
-  color: #4267b2;
-}
-.social-item:nth-child(1):hover .icon {
-  background-color: #4267b2;
-}
-.social-item:nth-child(2):hover .text {
-  color: #e11d48;
-}
-.social-item:nth-child(2):hover .icon {
-  background-color: #e11d48;
-}
-.social-item:nth-child(3):hover .text {
-  color: #dc2626;
-}
-.social-item:nth-child(3):hover .icon {
-  background-color: #dc2626;
-}
-</style>
