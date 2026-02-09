@@ -108,7 +108,7 @@ const currentPage = ref(1)
 const itemsPerPage = 24
 const categoryTitle = ref('')
 
-const filters = reactive({
+const filters = ref({
   year: '',
   country: '',
   genre: '',
@@ -151,33 +151,33 @@ watch(() => route.params.slug, (newSlug) => {
 const filteredMovies = computed(() => {
   let result = [...movies.value]
   
-  if (filters.year) {
-    result = result.filter(m => m.year === filters.year || m.year === parseInt(filters.year))
+  if (filters.value.year) {
+    result = result.filter(m => m.year === filters.value.year || m.year === parseInt(filters.value.year))
   }
   
-  if (filters.country) {
+  if (filters.value.country) {
     result = result.filter(m => {
       const countries = Array.isArray(m.country) ? m.country : []
       return countries.some(c => {
         const countrySlug = typeof c === 'string' ? c : c.slug
-        return countrySlug === filters.country
+        return countrySlug === filters.value.country
       })
     })
   }
   
-  if (filters.genre) {
+  if (filters.value.genre) {
     result = result.filter(m => {
       const categories = Array.isArray(m.category) ? m.category : []
       return categories.some(cat => {
         const catSlug = typeof cat === 'string' ? cat : cat.slug
-        return catSlug === filters.genre
+        return catSlug === filters.value.genre
       })
     })
   }
   
-  if (filters.sort === 'year') {
+  if (filters.value.sort === 'year') {
     result.sort((a, b) => (b.year || 0) - (a.year || 0))
-  } else if (filters.sort === 'name') {
+  } else if (filters.value.sort === 'name') {
     result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
   }
   
@@ -192,13 +192,7 @@ const paginatedMovies = computed(() => {
   return filteredMovies.value.slice(start, end)
 })
 
-function applyFilters(newFilters) {
-  console.log('Applying filters:', newFilters)
-  // Update each filter property individually to maintain reactivity
-  filters.year = newFilters.year
-  filters.country = newFilters.country
-  filters.genre = newFilters.genre
-  filters.sort = newFilters.sort
+function applyFilters() {
   currentPage.value = 1
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
