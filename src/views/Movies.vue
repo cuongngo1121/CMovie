@@ -7,9 +7,9 @@
       <div class="max-w-7xl mx-auto">
         <div class="text-center mb-8">
           <h1 class="text-3xl md:text-5xl font-bold text-primary mb-4">
-            Phim Lẻ
+            Lọc Phim
           </h1>
-          <p class="text-text-muted text-lg">Khám phá bộ sưu tập phim lẻ hấp dẫn</p>
+          <p class="text-text-muted text-lg">Tìm kiếm phim theo sở thích của bạn</p>
         </div>
 
         <!-- Filters -->
@@ -109,26 +109,33 @@ import MovieFilters from '../components/MovieFilters.vue'
 const router = useRouter()
 const movieStore = useMovieStore()
 
-const category = 'phim-le'
+const category = 'phim-moi-cap-nhat'
 const loading = ref(false)
 const currentPage = ref(1)
 const itemsPerPage = 24
 
 const filters = reactive({
+  type: '',
   year: '',
   country: '',
   genre: '',
   sort: 'latest'
 })
 
-const movies = ref([])
+const movies = computed(() => {
+  return movieStore.moviesByCategory[category]?.allMovies || []
+})
 
 onMounted(async () => {
   loading.value = true
   try {
-    // Use 'danh-sach' endpoint for Phim Le
-    await movieStore.getAllMoviesByCategory(category, 'danh-sach')
-    movies.value = movieStore.moviesByCategory[category]?.allMovies || []
+    // Check if we already have data
+    if (!movies.value.length) {
+      // Use 'danh-sach' endpoint for Phim Moi Cap Nhat
+      await movieStore.getAllMoviesByCategory(category, 'danh-sach')
+    }
+  } catch (error) {
+    console.error('Error loading movies:', error)
   } finally {
     loading.value = false
   }
@@ -137,6 +144,28 @@ onMounted(async () => {
 const filteredMovies = computed(() => {
   let result = [...movies.value]
   
+  if (filters.type) {
+    const typeMapping = {
+      'phim-le': 'single',
+      'phim-bo': 'series',
+      'hoat-hinh': 'hoathinh',
+      'tv-shows': 'tvshows'
+    }
+    const mappedType = typeMapping[filters.type] || filters.type
+
+    result = result.filter(m => {
+      // Check exact type match
+      if (m.type === mappedType) return true
+      
+      // Fallback: Check if type is in category (for some legacy data)
+      const categories = Array.isArray(m.category) ? m.category : []
+      return categories.some(cat => {
+        const catSlug = typeof cat === 'string' ? cat : cat.slug
+        return catSlug === filters.type
+      })
+    })
+  }
+
   if (filters.year) {
     result = result.filter(m => m.year === filters.year || m.year === parseInt(filters.year))
   }
