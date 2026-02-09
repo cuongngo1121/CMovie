@@ -114,7 +114,7 @@ const loading = ref(false)
 const currentPage = ref(1)
 const itemsPerPage = 24
 
-const filters = reactive({
+const filters = ref({
   type: '',
   year: '',
   country: '',
@@ -144,14 +144,14 @@ onMounted(async () => {
 const filteredMovies = computed(() => {
   let result = [...movies.value]
   
-  if (filters.type) {
+  if (filters.value.type) {
     const typeMapping = {
       'phim-le': 'single',
       'phim-bo': 'series',
       'hoat-hinh': 'hoathinh',
       'tv-shows': 'tvshows'
     }
-    const mappedType = typeMapping[filters.type] || filters.type
+    const mappedType = typeMapping[filters.value.type] || filters.value.type
 
     result = result.filter(m => {
       // Check exact type match
@@ -161,38 +161,38 @@ const filteredMovies = computed(() => {
       const categories = Array.isArray(m.category) ? m.category : []
       return categories.some(cat => {
         const catSlug = typeof cat === 'string' ? cat : cat.slug
-        return catSlug === filters.type
+        return catSlug === filters.value.type
       })
     })
   }
 
-  if (filters.year) {
-    result = result.filter(m => m.year === filters.year || m.year === parseInt(filters.year))
+  if (filters.value.year) {
+    result = result.filter(m => m.year === filters.value.year || m.year === parseInt(filters.value.year))
   }
   
-  if (filters.country) {
+  if (filters.value.country) {
     result = result.filter(m => {
       const countries = Array.isArray(m.country) ? m.country : []
       return countries.some(c => {
         const countrySlug = typeof c === 'string' ? c : c.slug
-        return countrySlug === filters.country
+        return countrySlug === filters.value.country
       })
     })
   }
   
-  if (filters.genre) {
+  if (filters.value.genre) {
     result = result.filter(m => {
       const categories = Array.isArray(m.category) ? m.category : []
       return categories.some(cat => {
         const catSlug = typeof cat === 'string' ? cat : cat.slug
-        return catSlug === filters.genre
+        return catSlug === filters.value.genre
       })
     })
   }
   
-  if (filters.sort === 'year') {
+  if (filters.value.sort === 'year') {
     result.sort((a, b) => (b.year || 0) - (a.year || 0))
-  } else if (filters.sort === 'name') {
+  } else if (filters.value.sort === 'name') {
     result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
   }
   

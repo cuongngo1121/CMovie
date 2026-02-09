@@ -50,9 +50,9 @@
 
       <!-- Content -->
       <div v-else>
-        <!-- Mobile Grid (3x3) -->
-        <div class="grid lg:hidden grid-cols-3 gap-2 sm:gap-4">
-          <div v-for="movie in movies.slice(0, 9)" :key="movie._id">
+        <!-- Mobile Grid (2x2) -->
+        <div class="grid lg:hidden grid-cols-2 gap-3 sm:gap-4">
+          <div v-for="movie in movies.slice(0, 8)" :key="movie._id">
             <MovieCard :movie="movie" @click="goToMovie(movie.slug)" />
           </div>
         </div>

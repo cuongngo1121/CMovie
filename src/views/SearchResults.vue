@@ -9,10 +9,19 @@
         <div class="mb-6">
           <h1 class="text-3xl md:text-4xl font-bold text-primary mb-4">
             Kết quả tìm kiếm
-            <span v-if="searchQuery" class="text-secondary"> "{{ searchQuery }}"</span>
           </h1>
-          <p v-if="!loading && movies.length > 0" class="text-text-muted">
-            Tìm thấy {{ movies.length }} kết quả
+          
+          <!-- Search Input for Mobile/Desktop -->
+          <div class="mb-6 max-w-2xl">
+            <SearchBox 
+              :initial-query="searchQuery" 
+              placeholder="Nhập tên phim cần tìm..." 
+              class="w-full"
+            />
+          </div>
+
+          <p v-if="!loading && movies.length > 0 && searchQuery" class="text-text-muted">
+            Tìm thấy {{ movies.length }} kết quả cho "<span class="text-secondary">{{ searchQuery }}</span>"
           </p>
         </div>
 
@@ -66,6 +75,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useMovieStore } from '../stores/movieStore'
 import NavBar from '../components/NavBar.vue'
 import MovieCard from '../components/MovieCard.vue'
+import SearchBox from '../components/SearchBox.vue'
 import MovieFilters from '../components/MovieFilters.vue'
 
 const route = useRoute()

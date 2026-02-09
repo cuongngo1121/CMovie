@@ -47,7 +47,6 @@ onMounted(() => {
   document.body.style.overflow = 'hidden'
 
   timer = setTimeout(() => {
-    router.push({ name: 'Home' })
     emit('finish')
   }, SPLASH_DURATION)
 })

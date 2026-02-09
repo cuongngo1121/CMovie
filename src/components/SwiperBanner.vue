@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-[85vh] md:h-screen min-h-[500px] bg-black overflow-hidden group">
+  <div class="relative w-full h-[85vh] md:h-screen min-h-[500px] bg-black overflow-hidden group hidden md:block">
     <swiper
       :slides-per-view="1"
       :modules="[Autoplay, Pagination, EffectFade]"

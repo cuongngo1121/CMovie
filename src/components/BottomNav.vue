@@ -24,14 +24,14 @@
       </router-link>
 
       <router-link 
-        to="/danh-sach/phim-le" 
+        to="/movies" 
         class="flex flex-col items-center justify-center gap-1 w-full h-full text-gray-400 hover:text-white transition-colors"
         active-class="text-red-600"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
         </svg>
-        <span class="text-[10px] font-medium">Phim Lẻ</span>
+        <span class="text-[10px] font-medium">Lọc Phim</span>
       </router-link>
 
       <button 

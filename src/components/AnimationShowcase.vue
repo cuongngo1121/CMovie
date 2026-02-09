@@ -1,5 +1,5 @@
 <template>
-  <div class="animation-showcase-section">
+  <div class="animation-showcase-section hidden md:block">
     <!-- Section Header (Absolute on top) -->
     <div class="absolute top-0 left-0 w-full z-20 px-4 sm:px-6 lg:px-8 py-6 md:py-8 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
       <div class="flex items-center justify-between max-w-[1600px] mx-auto pointer-events-auto">

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full px-6 py-8 text-white mt-12 relative overflow-hidden">
+  <div class="w-full px-3 md:px-6 py-8 text-white mt-12 relative overflow-hidden">
     <NavBar />
     <!-- Background gradient overlay -->
     <div class="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-blue-900/20 pointer-events-none"></div>

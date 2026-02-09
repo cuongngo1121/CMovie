@@ -52,23 +52,16 @@
    
     <!-- Movies Content -->
     <div v-else>
-      <!-- Mobile Grid (3x3) - Only on extra small screens -->
-      <div class="sm:hidden grid grid-cols-3 gap-2 px-2">
-        <div v-for="movie in movies.slice(0, 9)" :key="movie.slug" class="flex flex-col">
-          <MovieCard :movie="movie" @click="goToMovieDetails(movie)" class="h-full flex-1" />
-        </div>
-      </div>
-
-      <!-- Enhanced Swiper carousel - Hidden on extra small screens -->
-      <div class="hidden sm:block relative group/swiper">
+      <!-- Enhanced Swiper carousel - Visible on all screens -->
+      <div class="relative group/swiper">
       <swiper
         :modules="[Autoplay, Navigation]"
         :navigation="{
           nextEl: `.custom-next-${componentId}`,
           prevEl: `.custom-prev-${componentId}`,
         }"
-        :slides-per-view="2"
-        :space-between="16"
+        :slides-per-view="2.2"
+        :space-between="12"
         :breakpoints="{
           640: { slidesPerView: 2.2, spaceBetween: 20 },
           768: { slidesPerView: 3.2, spaceBetween: 24 },

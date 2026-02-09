@@ -16,12 +16,18 @@
         ref="searchInput"
         v-model="searchQuery"
         @input="handleInput"
+        @keydown.enter="goToSearchPage"
         @blur="handleBlur"
         type="text"
         :placeholder="placeholder"
         class="search-input-field"
       />
-      <button @click="closeSearch" class="close-btn" aria-label="Close">
+      <button @click="goToSearchPage" class="search-btn mr-1 text-gray-400 hover:text-white transition-colors" aria-label="Search">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </button>
+      <button v-if="searchQuery" @click="closeSearch" class="close-btn" aria-label="Close">
         <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
@@ -462,21 +468,18 @@ function handleImageError(e) {
 
 @media (max-width: 768px) {
   .search-box {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    right: 70px;
-    width: auto;
-    z-index: 101;
+    /* Remove fixed positioning to allow embedding in flow */
+    width: 100%;
+    max-width: 100%;
   }
 
   .results-dropdown {
-    position: fixed;
-    top: 70px;
-    left: 16px;
-    right: 16px;
-    width: auto;
-    max-height: calc(100vh - 90px);
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 60vh;
   }
 
   .result-poster {

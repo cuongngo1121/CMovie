@@ -4,7 +4,27 @@
     <div class="hidden lg:block filters-container bg-[#1a1a1a]/80 backdrop-blur-md border border-white/10 rounded-xl p-6 mb-8 shadow-xl animate-fade-in-up">
       <div class="flex flex-col gap-6">
         <!-- Filter Controls Row -->
-        <div class="grid grid-cols-4 gap-6">
+        <div class="grid grid-cols-5 gap-4">
+          <!-- Type Filter (Loại Phim) -->
+          <div class="flex-1 group">
+            <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Loại phim</label>
+            <div class="relative">
+              <select 
+                v-model="localFilters.type"
+                class="w-full bg-black/50 text-white border border-white/10 rounded-lg px-4 py-3 appearance-none focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all duration-300 cursor-pointer hover:bg-black/70"
+              >
+                <option value="" class="bg-[#1a1a1a] text-white">Tất cả loại</option>
+                <option value="phim-le" class="bg-[#1a1a1a] text-white">Phim Lẻ</option>
+                <option value="phim-bo" class="bg-[#1a1a1a] text-white">Phim Bộ</option>
+                <option value="hoat-hinh" class="bg-[#1a1a1a] text-white">Hoạt Hình</option>
+                <option value="tv-shows" class="bg-[#1a1a1a] text-white">TV Shows</option>
+              </select>
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </div>
+            </div>
+          </div>
+
           <!-- Year Filter -->
           <div class="flex-1 group">
             <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Năm phát hành</label>
@@ -43,7 +63,7 @@
 
           <!-- Genre Filter -->
           <div v-if="showGenre" class="flex-1 group">
-            <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Thể loại phim</label>
+            <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Thể loại</label>
             <div class="relative">
               <select 
                 v-model="localFilters.genre"
@@ -62,7 +82,7 @@
 
           <!-- Sort Filter -->
           <div class="flex-1 group">
-            <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Sắp xếp theo</label>
+            <label class="text-gray-400 text-sm font-medium mb-2 block group-hover:text-red-500 transition-colors">Sắp xếp</label>
             <div class="relative">
               <select 
                 v-model="localFilters.sort"
@@ -149,6 +169,21 @@
 
             <!-- Scrollable Content -->
             <div class="flex-1 overflow-y-auto p-4 space-y-6">
+              <!-- Type -->
+              <div>
+                <label class="text-gray-400 text-sm font-medium mb-2 block">Loại phim</label>
+                <select 
+                  v-model="localFilters.type"
+                  class="w-full bg-white/5 text-white border border-white/10 rounded-xl px-4 py-3.5 appearance-none focus:outline-none focus:border-red-500"
+                >
+                  <option value="" class="bg-[#1a1a1a]">Tất cả loại</option>
+                  <option value="phim-le" class="bg-[#1a1a1a]">Phim Lẻ</option>
+                  <option value="phim-bo" class="bg-[#1a1a1a]">Phim Bộ</option>
+                  <option value="hoat-hinh" class="bg-[#1a1a1a]">Hoạt Hình</option>
+                  <option value="tv-shows" class="bg-[#1a1a1a]">TV Shows</option>
+                </select>
+              </div>
+
               <!-- Year -->
               <div>
                 <label class="text-gray-400 text-sm font-medium mb-2 block">Năm phát hành</label>
@@ -231,7 +266,7 @@ import { reactive, watch, ref } from 'vue'
 const props = defineProps({
   modelValue: {
     type: Object,
-    default: () => ({ year: '', country: '', genre: '', sort: 'latest' })
+    default: () => ({ type: '', year: '', country: '', genre: '', sort: 'latest' })
   },
   showGenre: {
     type: Boolean,
@@ -243,6 +278,7 @@ const emit = defineEmits(['update:modelValue', 'filter-change'])
 const isOpen = ref(false)
 
 const localFilters = reactive({
+  type: props.modelValue.type || '',
   year: props.modelValue.year || '',
   country: props.modelValue.country || '',
   genre: props.modelValue.genre || '',
@@ -271,6 +307,7 @@ const genres = [
   { name: 'Hành Động', slug: 'hanh-dong' },
   { name: 'Tình Cảm', slug: 'tinh-cam' },
   { name: 'Hài Hước', slug: 'hai-huoc' },
+  { name: 'Hoạt Hình', slug: 'hoat-hinh' },
   { name: 'Cổ Trang', slug: 'co-trang' },
   { name: 'Tâm Lý', slug: 'tam-ly' },
   { name: 'Hình Sự', slug: 'hinh-su' },
@@ -297,6 +334,7 @@ function applyMobileFilters() {
 }
 
 function resetFilters() {
+  localFilters.type = ''
   localFilters.year = ''
   localFilters.country = ''
   localFilters.genre = ''

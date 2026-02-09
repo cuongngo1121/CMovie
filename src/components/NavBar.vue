@@ -83,12 +83,8 @@
         <!-- Spacer -->
         <div class="flex-1"></div>
 
-        <!-- Right Side: Search & Theme -->
+        <!-- Right Side: Theme Toggle Only -->
         <div class="hidden lg:flex items-center gap-4">
-          <div class="w-64 transition-all duration-300 focus-within:w-80">
-             <SearchBox placeholder="Tìm kiếm phim..." />
-          </div>
-          
           <button 
             @click="toggleTheme" 
             class="w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center text-gray-400 hover:text-yellow-400 transition-colors"
@@ -103,9 +99,10 @@
         </div>
 
         <!-- Mobile Menu Button -->
+        <!-- Mobile Menu Button (Hidden because we use BottomNav) -->
         <button
           @click="toggleMobileMenu"
-          class="lg:hidden ml-auto p-2 text-gray-400 hover:text-white transition-colors"
+          class="hidden ml-auto p-2 text-gray-400 hover:text-white transition-colors"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path v-if="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -124,12 +121,9 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-4"
     >
-      <div v-show="isMobileMenuOpen" class="lg:hidden bg-[#0f0f0f] border-t border-white/5 h-[calc(100vh-64px)] overflow-y-auto">
+      <div v-show="isMobileMenuOpen" class="lg:hidden bg-[#0f0f0f] border-t border-white/5 h-[calc(100vh-64px)] overflow-y-auto pb-24">
         <div class="px-4 py-6 space-y-4">
-          <!-- Search Mobile (Better Integration) -->
-          <div class="relative pb-2">
-             <SearchBox placeholder="Tìm kiếm phim..." class="w-full" />
-          </div>
+
 
           <!-- Main Menu Grid -->
           <div class="grid grid-cols-2 gap-2">
@@ -227,7 +221,6 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import SearchBox from './SearchBox.vue'
 
 const isMobileMenuOpen = ref(false)
 const isDark = ref(true)
@@ -242,6 +235,7 @@ const mainMenuItems = [
   { name: 'Trang chủ', link: '/' },
   { name: 'Phim Bộ', link: '/danh-sach/phim-bo' },
   { name: 'Phim Lẻ', link: '/danh-sach/phim-le' },
+  { name: 'Lọc Phim', link: '/movies' },
   { name: 'Hoạt Hình', link: '/danh-sach/hoat-hinh' },
   { name: 'TV Shows', link: '/danh-sach/tv-shows' }
 ]
