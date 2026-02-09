@@ -44,24 +44,24 @@
                 {{ movie.name }}
               </h1>
               
-              <!-- Origin Name -->
-              <p class="text-lg md:text-3xl text-white/80 font-light italic opacity-0 animate-slide-up line-clamp-1" style="animation-delay: 0.4s;">
+              <!-- Origin Name (Hidden on Mobile) -->
+              <p class="hidden md:block text-lg md:text-3xl text-white/80 font-light italic opacity-0 animate-slide-up line-clamp-1" style="animation-delay: 0.4s;">
                  {{ movie.origin_name }}
               </p>
 
               <!-- Meta Row -->
-              <div class="flex items-center gap-3 md:gap-4 text-sm md:text-lg font-medium text-gray-200 opacity-0 animate-slide-up" style="animation-delay: 0.6s;">
+              <div class="flex items-center gap-3 md:gap-4 text-xs md:text-lg font-medium text-gray-200 opacity-0 animate-slide-up" style="animation-delay: 0.6s;">
                 <span class="text-[#46d369] font-bold">98% Match</span>
                 <span class="text-gray-400">•</span>
                 <span>{{ movie.year }}</span>
                 <span class="text-gray-400">•</span>
-                <span class="border border-white/30 px-1.5 py-0.5 rounded text-xs md:text-sm bg-black/30 backdrop-blur-sm">{{ movie.quality || 'HD' }}</span>
-                <span class="text-gray-400">•</span>
-                <span class="truncate max-w-[100px] md:max-w-none">{{ movie.lang }}</span>
+                <span class="border border-white/30 px-1.5 py-0.5 rounded text-[10px] md:text-sm bg-black/30 backdrop-blur-sm">{{ movie.quality || 'HD' }}</span>
+                <span class="hidden sm:inline text-gray-400">•</span>
+                <span class="hidden sm:inline truncate max-w-[100px] md:max-w-none">{{ movie.lang }}</span>
               </div>
 
-              <!-- Description -->
-              <p class="text-gray-300 text-sm md:text-xl line-clamp-2 md:line-clamp-3 max-w-xl md:max-w-2xl leading-relaxed drop-shadow-lg opacity-0 animate-slide-up" style="animation-delay: 0.8s;">
+              <!-- Description (Reduced on Mobile) -->
+              <p class="text-gray-300 text-xs md:text-xl line-clamp-2 md:line-clamp-3 max-w-xl md:max-w-2xl leading-relaxed drop-shadow-lg opacity-0 animate-slide-up" style="animation-delay: 0.8s;">
                  {{ movie.content || 'Một siêu phẩm điện ảnh không thể bỏ lỡ. Khám phá ngay thế giới phim đặc sắc với chất lượng hình ảnh tuyệt đỉnh...' }}
               </p>
 

@@ -87,8 +87,8 @@
                   <p v-if="movie.origin_name" class="movie-subtitle text-shadow">{{ movie.origin_name }}</p>
                 </div>
 
-                <!-- Meta Info Grid -->
-                <div class="meta-grid">
+                <!-- Meta Info Grid (Hidden on Mobile) -->
+                <div class="meta-grid hidden md:grid">
                   <div v-if="movie.episode_current" class="meta-item">
                     <span class="meta-label">Tập mới nhất:</span>
                     <span class="meta-value highlight">{{ movie.episode_current }}</span>
@@ -107,8 +107,8 @@
                   </div>
                 </div>
 
-                <!-- Description -->
-                <p v-if="movie.content" class="movie-description hidden sm:block drop-shadow-md">
+                <!-- Description (Hidden on Mobile) -->
+                <p v-if="movie.content" class="movie-description hidden md:block drop-shadow-md">
                   {{ truncateText(stripHtml(movie.content), 150) }}
                 </p>
 
@@ -201,7 +201,7 @@ function goToMovie(slug) {
 .animation-showcase-section {
   position: relative;
   width: 100%;
-  height: 500px; /* Fixed height for mobile */
+  height: 400px; /* Reduced height for mobile */
   overflow: hidden;
   background: #000;
 }

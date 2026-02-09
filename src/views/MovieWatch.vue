@@ -107,27 +107,26 @@
 
           <!-- Sidebar (Episodes & Info) -->
           <div class="lg:col-span-1 flex flex-col h-full">
-            <div class="bg-[#1a1a1a]/80 backdrop-blur-md rounded-2xl border border-white/5 overflow-hidden flex flex-col h-full max-h-[600px] lg:max-h-[calc(100vh-150px)] sticky top-24 shadow-xl">
+            <div class="bg-[#1a1a1a]/80 backdrop-blur-md rounded-2xl border border-white/5 overflow-hidden flex flex-col h-full max-h-[400px] md:max-h-[600px] lg:max-h-[calc(100vh-150px)] sticky top-24 shadow-xl">
               <!-- Sidebar Header -->
-              <div class="p-4 border-b border-white/5 bg-white/5 backdrop-blur-sm flex justify-between items-center">
-                <h3 class="text-lg font-bold flex items-center gap-2 text-amber-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <div class="p-3 md:p-4 border-b border-white/5 bg-white/5 backdrop-blur-sm flex justify-between items-center">
+                <h3 class="text-base md:text-lg font-bold flex items-center gap-2 text-amber-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 17.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                   </svg>
                   Danh sách tập
                 </h3>
-                <span class="px-2 py-1 rounded-md bg-white/5 text-xs text-gray-400 border border-white/5">{{ movie?.episode_total || '?' }} tập</span>
               </div>
 
               <!-- Episode Grid -->
-              <div class="flex-1 overflow-y-auto p-3 custom-scrollbar">
-                <div class="grid grid-cols-4 lg:grid-cols-3 gap-2">
+              <div class="flex-1 overflow-y-auto p-2 md:p-3 custom-scrollbar">
+                <div class="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-3 gap-1.5 md:gap-2">
                   <button
                     v-for="(ep, index) in movie?.episodes?.[0]?.server_data"
                     :key="index"
                     @click="handleClick(index)"
                     :class="[
-                      'relative px-2 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 border group overflow-hidden',
+                      'relative px-1 py-2 md:px-2 md:py-2.5 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 border group overflow-hidden',
                       currentEpisode === index
                         ? 'bg-gradient-to-br from-amber-500 to-yellow-600 border-amber-400/50 text-black shadow-[0_0_15px_rgba(245,158,11,0.3)] scale-105 z-10'
                         : 'bg-white/5 border-transparent text-gray-400 hover:bg-white/10 hover:border-amber-500/30 hover:text-white'
@@ -136,8 +135,6 @@
                     <span class="relative z-10">{{ ep.name }}</span>
                     <!-- Shine effect for active -->
                     <div v-if="currentEpisode === index" class="absolute inset-0 bg-gradient-to-tr from-white/40 to-transparent opacity-50"></div>
-                    <!-- Hover glow -->
-                    <div class="absolute inset-0 bg-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
                 </div>
               </div>

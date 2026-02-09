@@ -124,57 +124,100 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-4"
     >
-      <div v-show="isMobileMenuOpen" class="lg:hidden bg-[#111] border-t border-white/10">
-        <div class="px-4 py-6 space-y-6">
-          <!-- Search Mobile -->
-          <div class="relative">
+      <div v-show="isMobileMenuOpen" class="lg:hidden bg-[#0f0f0f] border-t border-white/5 h-[calc(100vh-64px)] overflow-y-auto">
+        <div class="px-4 py-6 space-y-4">
+          <!-- Search Mobile (Better Integration) -->
+          <div class="relative pb-2">
              <SearchBox placeholder="Tìm kiếm phim..." class="w-full" />
           </div>
 
-          <div class="space-y-1">
+          <!-- Main Menu Grid -->
+          <div class="grid grid-cols-2 gap-2">
             <router-link
               v-for="item in mainMenuItems"
               :key="item.link"
               :to="item.link"
               @click="closeMobileMenu"
-              class="block px-4 py-3 rounded-xl text-base font-semibold text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
-              active-class="text-red-500 bg-red-500/10"
+              class="flex items-center justify-center h-12 rounded-xl text-sm font-bold text-gray-300 bg-white/5 hover:bg-white/10 border border-white/5 transition-all active:scale-95"
+              active-class="text-red-500 bg-red-500/10 border-red-500/20"
             >
               {{ item.name }}
             </router-link>
           </div>
 
-          <div class="border-t border-white/10 pt-6">
-            <div class="grid grid-cols-2 gap-8">
-              <div>
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Thể Loại</h3>
-                <div class="space-y-2">
-                  <router-link
-                    v-for="genre in genres.slice(0, 5)"
-                    :key="genre.slug"
-                    :to="genre.link"
-                    @click="closeMobileMenu"
-                    class="block text-sm text-gray-400 hover:text-red-500 transition-colors"
-                  >
-                    {{ genre.name }}
-                  </router-link>
-                </div>
-              </div>
-              <div>
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Quốc Gia</h3>
-                 <div class="space-y-2">
-                  <router-link
-                    v-for="country in countries"
-                    :key="country.slug"
-                    :to="country.link"
-                    @click="closeMobileMenu"
-                    class="block text-sm text-gray-400 hover:text-red-500 transition-colors"
-                  >
-                    {{ country.name }}
-                  </router-link>
-                </div>
+          <!-- Accordion Sections -->
+          <div class="space-y-2 pt-2">
+            <!-- Thể Loại Section -->
+            <div class="bg-white/5 rounded-2xl overflow-hidden border border-white/5">
+              <button 
+                @click="activeAccordion = activeAccordion === 'genre' ? null : 'genre'"
+                class="w-full px-5 py-4 flex items-center justify-between text-sm font-bold text-gray-200"
+              >
+                <span>THEO THỂ LOẠI</span>
+                <svg 
+                  class="w-4 h-4 transition-transform duration-300" 
+                  :class="{ 'rotate-180': activeAccordion === 'genre' }"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div v-show="activeAccordion === 'genre'" class="px-5 pb-5 grid grid-cols-2 gap-2 animate-fadeIn">
+                <router-link
+                  v-for="genre in genres"
+                  :key="genre.slug"
+                  :to="genre.link"
+                  @click="closeMobileMenu"
+                  class="text-xs py-2.5 px-3 bg-white/5 rounded-lg text-gray-400 hover:text-white"
+                >
+                  {{ genre.name }}
+                </router-link>
               </div>
             </div>
+
+            <!-- Quốc Gia Section -->
+            <div class="bg-white/5 rounded-2xl overflow-hidden border border-white/5">
+              <button 
+                @click="activeAccordion = activeAccordion === 'country' ? null : 'country'"
+                class="w-full px-5 py-4 flex items-center justify-between text-sm font-bold text-gray-200"
+              >
+                <span>THEO QUỐC GIA</span>
+                <svg 
+                  class="w-4 h-4 transition-transform duration-300" 
+                  :class="{ 'rotate-180': activeAccordion === 'country' }"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div v-show="activeAccordion === 'country'" class="px-5 pb-5 grid grid-cols-2 gap-2 animate-fadeIn">
+                <router-link
+                  v-for="country in countries"
+                  :key="country.slug"
+                  :to="country.link"
+                  @click="closeMobileMenu"
+                  class="text-xs py-2.5 px-3 bg-white/5 rounded-lg text-gray-400 hover:text-white"
+                >
+                  {{ country.name }}
+                </router-link>
+              </div>
+            </div>
+          </div>
+
+          <!-- Theme Toggle Mobile -->
+          <div class="pt-4">
+            <button 
+              @click="toggleTheme" 
+              class="w-full h-12 rounded-xl bg-white/5 flex items-center justify-center gap-3 text-sm font-bold text-gray-400 border border-white/5"
+            >
+              <svg v-if="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+              <span>{{ isDark ? 'Chế độ Sáng' : 'Chế độ Tối' }}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -189,6 +232,7 @@ import SearchBox from './SearchBox.vue'
 const isMobileMenuOpen = ref(false)
 const isDark = ref(true)
 const isScrolled = ref(false)
+const activeAccordion = ref(null)
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 20
