@@ -38,8 +38,17 @@
         </div>
       </div>
 
-      <!-- Movies Swiper -->
-      <div v-else-if="movies.length > 0" class="relative group/swiper">
+      <!-- Movies Content -->
+      <div v-else-if="movies.length > 0">
+        <!-- Mobile Grid (3x3) - Hidden on sm and up -->
+        <div class="sm:hidden grid grid-cols-3 gap-2">
+          <div v-for="movie in movies.slice(0, 9)" :key="movie._id" class="flex flex-col">
+            <MovieCard :movie="movie" @click="goToMovieDetails(movie)" class="h-full flex-1" />
+          </div>
+        </div>
+
+        <!-- Movies Swiper - Visible on sm and up -->
+        <div class="hidden sm:block relative group/swiper">
         <swiper
           :modules="[Autoplay, Navigation, Pagination]"
           :slides-per-view="2.3"
@@ -98,6 +107,7 @@
         <!-- Custom Pagination -->
         <div class="swiper-pagination-custom !bottom-0 flex items-center justify-center gap-1.5 md:gap-2"></div>
       </div>
+    </div>
 
       <!-- Empty State -->
       <div v-else class="text-center py-16 md:py-20">

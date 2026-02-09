@@ -50,8 +50,17 @@
       </button>
     </div>
    
-    <!-- Enhanced Swiper carousel -->
-    <div v-else class="relative group/swiper">
+    <!-- Movies Content -->
+    <div v-else>
+      <!-- Mobile Grid (3x3) - Only on extra small screens -->
+      <div class="sm:hidden grid grid-cols-3 gap-2 px-2">
+        <div v-for="movie in movies.slice(0, 9)" :key="movie.slug" class="flex flex-col">
+          <MovieCard :movie="movie" @click="goToMovieDetails(movie)" class="h-full flex-1" />
+        </div>
+      </div>
+
+      <!-- Enhanced Swiper carousel - Hidden on extra small screens -->
+      <div class="hidden sm:block relative group/swiper">
       <swiper
         :modules="[Autoplay, Navigation]"
         :navigation="{
@@ -102,6 +111,7 @@
       </swiper>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>

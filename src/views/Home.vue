@@ -7,19 +7,19 @@
     <Banner />
 
     <!-- Trending Section (Grid Layout) -->
-    <TrendingSection />
+    <TrendingSection v-reveal />
 
     <!-- Recently Updated (Slider) -->
-    <RecentlyUpdate />
+    <RecentlyUpdate v-reveal />
 
     <!-- Animation Showcase (Premium Slider) -->
-    <AnimationShowcase />
+    <AnimationShowcase v-reveal />
 
     <!-- Movie Categories (Sliders) -->
     <div class="w-full space-y-8 md:space-y-12 py-8 md:py-12 bg-gradient-to-b from-gray-900 to-black">
-      <NewMovie title="Phim Chiếu Rạp" category="phim-chieu-rap" />
-      <NewMovie title="Phim Bộ Hot" category="phim-bo" />
-      <NewMovie title="Phim Lẻ Mới" category="phim-le" />
+      <NewMovie v-reveal title="Phim Chiếu Rạp" category="phim-chieu-rap" />
+      <NewMovie v-reveal title="Phim Bộ Hot" category="phim-bo" />
+      <NewMovie v-reveal title="Phim Lẻ Mới" category="phim-le" />
     </div>
 
     <FooterWeb />

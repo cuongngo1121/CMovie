@@ -141,3 +141,48 @@ body {
   transition-property: background-color, border-color, color, fill, stroke;
   transition-duration: 200ms;
 }
+
+/* Scroll Reveal Animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.reveal-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Optional: Staggering for children if needed */
+.reveal-stagger>* {
+  opacity: 0 !important;
+  transform: translateY(20px) !important;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.reveal-visible.reveal-stagger>* {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.reveal-visible.reveal-stagger>*:nth-child(1) {
+  transition-delay: 0.1s !important;
+}
+
+.reveal-visible.reveal-stagger>*:nth-child(2) {
+  transition-delay: 0.2s !important;
+}
+
+.reveal-visible.reveal-stagger>*:nth-child(3) {
+  transition-delay: 0.3s !important;
+}
+
+.reveal-visible.reveal-stagger>*:nth-child(4) {
+  transition-delay: 0.4s !important;
+}
+
+.reveal-visible.reveal-stagger>*:nth-child(5) {
+  transition-delay: 0.5s !important;
+}
