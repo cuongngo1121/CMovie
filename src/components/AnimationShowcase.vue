@@ -5,10 +5,8 @@
       <div class="flex items-center justify-between max-w-[1600px] mx-auto pointer-events-auto">
         <div>
           <h2 class="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2 flex items-center gap-2 md:gap-3 text-shadow">
-            <span class="text-2xl md:text-4xl">✨</span>
             Hoạt Hình Nổi Bật
           </h2>
-          <p class="text-gray-200 text-sm md:text-lg text-shadow-sm">Khám phá thế giới anime đầy màu sắc</p>
         </div>
         <router-link 
           to="/animation" 
