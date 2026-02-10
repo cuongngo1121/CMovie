@@ -83,8 +83,9 @@
         <!-- Spacer -->
         <div class="flex-1"></div>
 
-        <!-- Right Side: Theme Toggle Only -->
+        <!-- Right Side: Search & Theme Toggle -->
         <div class="hidden lg:flex items-center gap-4">
+          <SearchBox />
           <button 
             @click="toggleTheme" 
             class="w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center text-gray-400 hover:text-yellow-400 transition-colors"
@@ -123,7 +124,10 @@
     >
       <div v-show="isMobileMenuOpen" class="lg:hidden bg-[#0f0f0f] border-t border-white/5 h-[calc(100vh-64px)] overflow-y-auto pb-24">
         <div class="px-4 py-6 space-y-4">
-
+          <!-- Search Mobile -->
+          <div class="pb-2">
+            <SearchBox placeholder="Tìm kiếm phim..." />
+          </div>
 
           <!-- Main Menu Grid -->
           <div class="grid grid-cols-2 gap-2">
@@ -221,6 +225,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import SearchBox from './SearchBox.vue'
 
 const isMobileMenuOpen = ref(false)
 const isDark = ref(true)
