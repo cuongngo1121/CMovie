@@ -716,6 +716,41 @@ watch(() => route.params.slug, async (newSlug) => {
   .player-container.aspect-4-3 :deep(video) {
     object-fit: fill !important;
   }
+
+  /* === FULLSCREEN OVERRIDE === */
+  /* When Artplayer enters native fullscreen, reset our custom transforms */
+  .player-container :deep(.art-video-player.art-fullscreen),
+  .player-container :deep(.art-video-player:fullscreen),
+  .player-container :deep(.art-video-player:-webkit-full-screen) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    transform: none !important;
+    z-index: 99999 !important;
+  }
+
+  .player-container :deep(.art-fullscreen video),
+  .player-container :deep(:fullscreen video),
+  .player-container :deep(:-webkit-full-screen video) {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  /* Also handle iframe fullscreen */
+  iframe:fullscreen,
+  iframe:-webkit-full-screen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    transform: none !important;
+    z-index: 99999 !important;
+  }
 }
 
 /* Aspect toolbar animation */
