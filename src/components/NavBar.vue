@@ -99,8 +99,7 @@
           </button>
         </div>
 
-        <!-- Mobile Menu Button -->
-        <!-- Mobile Menu Button (Hidden because we use BottomNav) -->
+        <!-- Mobile - hidden (BottomNav handles mobile) -->
         <button
           @click="toggleMobileMenu"
           class="hidden ml-auto p-2 text-gray-400 hover:text-white transition-colors"
@@ -113,113 +112,163 @@
       </div>
     </div>
 
-    <!-- Mobile Menu -->
-    <transition
-      enter-active-class="transition-all duration-300 ease-out"
-      enter-from-class="opacity-0 -translate-y-4"
-      enter-to-class="opacity-100 translate-y-0"
-      leave-active-class="transition-all duration-200 ease-in"
-      leave-from-class="opacity-100 translate-y-0"
-      leave-to-class="opacity-0 -translate-y-4"
-    >
-      <div v-show="isMobileMenuOpen" class="lg:hidden bg-[#0f0f0f] border-t border-white/5 h-[calc(100vh-64px)] overflow-y-auto pb-24">
-        <div class="px-4 py-6 space-y-4">
-          <!-- Search Mobile -->
-          <div class="pb-2">
-            <SearchBox placeholder="Tìm kiếm phim..." />
-          </div>
+    <!-- Mobile Menu Drawer (Slide from Right) -->
+    <Teleport to="body">
+      <!-- Backdrop -->
+      <transition
+        enter-active-class="transition-opacity duration-300 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition-opacity duration-200 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div v-show="isMobileMenuOpen" @click="closeMobileMenu" class="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm lg:hidden"></div>
+      </transition>
 
-          <!-- Main Menu Grid -->
-          <div class="grid grid-cols-2 gap-2">
-            <router-link
-              v-for="item in mainMenuItems"
-              :key="item.link"
-              :to="item.link"
+      <!-- Drawer Panel -->
+      <transition
+        enter-active-class="transition-transform duration-300 ease-out"
+        enter-from-class="translate-x-full"
+        enter-to-class="translate-x-0"
+        leave-active-class="transition-transform duration-200 ease-in"
+        leave-from-class="translate-x-0"
+        leave-to-class="translate-x-full"
+      >
+        <div v-show="isMobileMenuOpen" class="fixed top-0 right-0 bottom-0 z-[71] w-[85vw] max-w-[360px] bg-[#0a0a0a] lg:hidden flex flex-col">
+          <!-- Drawer Header -->
+          <div class="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
+            <span class="text-xl font-black text-red-600 tracking-tighter">PHIM CHÙA</span>
+            <button 
               @click="closeMobileMenu"
-              class="flex items-center justify-center h-12 rounded-xl text-sm font-bold text-gray-300 bg-white/5 hover:bg-white/10 border border-white/5 transition-all active:scale-95"
-              active-class="text-red-500 bg-red-500/10 border-red-500/20"
+              class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 active:scale-90 transition-all"
             >
-              {{ item.name }}
-            </router-link>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
-          <!-- Accordion Sections -->
-          <div class="space-y-2 pt-2">
-            <!-- Thể Loại Section -->
-            <div class="bg-white/5 rounded-2xl overflow-hidden border border-white/5">
+          <!-- Scrollable Content -->
+          <div class="flex-1 overflow-y-auto overscroll-contain px-4 py-5 space-y-5">
+            <!-- Search -->
+            <div>
+              <SearchBox placeholder="Tìm kiếm phim..." />
+            </div>
+
+            <!-- Quick Nav Links -->
+            <div class="space-y-1">
+              <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold px-2 mb-2">Danh mục</p>
+              <router-link
+                v-for="item in mainMenuItems"
+                :key="item.link"
+                :to="item.link"
+                @click="closeMobileMenu"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-all active:scale-[0.98]"
+                active-class="text-red-500 bg-red-500/[0.08]"
+              >
+                <span class="w-1 h-5 rounded-full bg-red-600/50"></span>
+                {{ item.name }}
+              </router-link>
+            </div>
+
+            <!-- Thể Loại Accordion -->
+            <div class="rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.02]">
               <button 
                 @click="activeAccordion = activeAccordion === 'genre' ? null : 'genre'"
-                class="w-full px-5 py-4 flex items-center justify-between text-sm font-bold text-gray-200"
+                class="w-full px-4 py-3.5 flex items-center justify-between"
               >
-                <span>THEO THỂ LOẠI</span>
+                <span class="text-xs text-gray-300 uppercase tracking-widest font-bold">Thể loại</span>
                 <svg 
-                  class="w-4 h-4 transition-transform duration-300" 
+                  class="w-4 h-4 text-gray-500 transition-transform duration-300" 
                   :class="{ 'rotate-180': activeAccordion === 'genre' }"
                   fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 >
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div v-show="activeAccordion === 'genre'" class="px-5 pb-5 grid grid-cols-2 gap-2 animate-fadeIn">
-                <router-link
-                  v-for="genre in genres"
-                  :key="genre.slug"
-                  :to="genre.link"
-                  @click="closeMobileMenu"
-                  class="text-xs py-2.5 px-3 bg-white/5 rounded-lg text-gray-400 hover:text-white"
-                >
-                  {{ genre.name }}
-                </router-link>
-              </div>
+              <transition
+                enter-active-class="transition-all duration-300 ease-out"
+                enter-from-class="max-h-0 opacity-0"
+                enter-to-class="max-h-96 opacity-100"
+                leave-active-class="transition-all duration-200 ease-in"
+                leave-from-class="max-h-96 opacity-100"
+                leave-to-class="max-h-0 opacity-0"
+              >
+                <div v-show="activeAccordion === 'genre'" class="overflow-hidden">
+                  <div class="px-3 pb-4 flex flex-wrap gap-2">
+                    <router-link
+                      v-for="genre in genres"
+                      :key="genre.slug"
+                      :to="genre.link"
+                      @click="closeMobileMenu"
+                      class="px-3 py-1.5 text-xs font-medium text-gray-400 bg-white/5 rounded-lg hover:bg-red-600/20 hover:text-red-400 transition-all border border-transparent hover:border-red-500/20"
+                    >
+                      {{ genre.name }}
+                    </router-link>
+                  </div>
+                </div>
+              </transition>
             </div>
 
-            <!-- Quốc Gia Section -->
-            <div class="bg-white/5 rounded-2xl overflow-hidden border border-white/5">
+            <!-- Quốc Gia Accordion -->
+            <div class="rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.02]">
               <button 
                 @click="activeAccordion = activeAccordion === 'country' ? null : 'country'"
-                class="w-full px-5 py-4 flex items-center justify-between text-sm font-bold text-gray-200"
+                class="w-full px-4 py-3.5 flex items-center justify-between"
               >
-                <span>THEO QUỐC GIA</span>
+                <span class="text-xs text-gray-300 uppercase tracking-widest font-bold">Quốc gia</span>
                 <svg 
-                  class="w-4 h-4 transition-transform duration-300" 
+                  class="w-4 h-4 text-gray-500 transition-transform duration-300" 
                   :class="{ 'rotate-180': activeAccordion === 'country' }"
                   fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 >
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div v-show="activeAccordion === 'country'" class="px-5 pb-5 grid grid-cols-2 gap-2 animate-fadeIn">
-                <router-link
-                  v-for="country in countries"
-                  :key="country.slug"
-                  :to="country.link"
-                  @click="closeMobileMenu"
-                  class="text-xs py-2.5 px-3 bg-white/5 rounded-lg text-gray-400 hover:text-white"
-                >
-                  {{ country.name }}
-                </router-link>
-              </div>
+              <transition
+                enter-active-class="transition-all duration-300 ease-out"
+                enter-from-class="max-h-0 opacity-0"
+                enter-to-class="max-h-96 opacity-100"
+                leave-active-class="transition-all duration-200 ease-in"
+                leave-from-class="max-h-96 opacity-100"
+                leave-to-class="max-h-0 opacity-0"
+              >
+                <div v-show="activeAccordion === 'country'" class="overflow-hidden">
+                  <div class="px-3 pb-4 flex flex-wrap gap-2">
+                    <router-link
+                      v-for="country in countries"
+                      :key="country.slug"
+                      :to="country.link"
+                      @click="closeMobileMenu"
+                      class="px-3 py-1.5 text-xs font-medium text-gray-400 bg-white/5 rounded-lg hover:bg-red-600/20 hover:text-red-400 transition-all border border-transparent hover:border-red-500/20"
+                    >
+                      {{ country.name }}
+                    </router-link>
+                  </div>
+                </div>
+              </transition>
             </div>
           </div>
 
-          <!-- Theme Toggle Mobile -->
-          <div class="pt-4">
+          <!-- Drawer Footer -->
+          <div class="px-4 py-4 border-t border-white/[0.06] pb-safe">
             <button 
               @click="toggleTheme" 
-              class="w-full h-12 rounded-xl bg-white/5 flex items-center justify-center gap-3 text-sm font-bold text-gray-400 border border-white/5"
+              class="w-full h-11 rounded-xl bg-white/5 flex items-center justify-center gap-3 text-xs font-bold text-gray-500 active:scale-[0.98] transition-all"
             >
-              <svg v-if="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="!isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
-              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
               </svg>
               <span>{{ isDark ? 'Chế độ Sáng' : 'Chế độ Tối' }}</span>
             </button>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </Teleport>
   </nav>
 </template>
 
@@ -312,5 +361,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Scoped styles can remain empty or minimal */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
 </style>

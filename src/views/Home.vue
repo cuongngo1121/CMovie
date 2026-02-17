@@ -16,7 +16,7 @@
     <AnimationShowcase v-reveal />
 
     <!-- Movie Categories (Sliders) -->
-    <div class="w-full space-y-8 md:space-y-12 py-8 md:py-12 bg-gradient-to-b from-gray-900 to-black">
+    <div class="w-full space-y-4 md:space-y-12 py-4 md:py-12 bg-gradient-to-b from-gray-900 to-black">
       <NewMovie v-reveal title="Phim Chiếu Rạp" category="phim-chieu-rap" />
       <NewMovie v-reveal title="Phim Bộ Hot" category="phim-bo" />
       <NewMovie v-reveal title="Phim Lẻ Mới" category="phim-le" />

@@ -1,27 +1,13 @@
 <template>
-  <div class=" w-full ">
-    <!-- <img 
-      class="w-full h-[744px] object-cover object-center block" 
-      src="../assets/Rectangle 2.png" 
-      alt=""
-    > -->
+  <div class="w-full">
+    <!-- Mobile Hero Banner -->
+    <MobileHeroBanner />
+    <!-- Desktop Swiper Banner -->
     <SwiperBanner />
-    
   </div>
 </template>
 
-
-
-
-
-
-
-
-
 <script setup>
-import SwiperBanner from './SwiperBanner.vue';
+import SwiperBanner from './SwiperBanner.vue'
+import MobileHeroBanner from './MobileHeroBanner.vue'
 </script>
-
-<style>
-
-</style>

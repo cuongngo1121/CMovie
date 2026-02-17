@@ -3,7 +3,7 @@
     <NavBar />
 
     <!-- Immersive Player Section -->
-    <div class="relative w-full bg-black pt-20 pb-8 md:pt-24 md:pb-12 shadow-2xl z-10 overflow-hidden">
+    <div class="player-section relative w-full bg-black pt-16 pb-4 md:pt-24 md:pb-12 shadow-2xl z-10 overflow-hidden">
       <!-- Dynamic Background Glow -->
       <div class="absolute inset-0 pointer-events-none">
         <div class="absolute -top-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[80%] bg-amber-600/10 rounded-full blur-[120px] opacity-40 animate-pulse-slow"></div>
@@ -13,7 +13,7 @@
 
       <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <!-- Breadcrumb / Back Navigation -->
-        <div class="flex items-center gap-2 mb-6 text-sm text-gray-400">
+        <div class="breadcrumb-bar flex items-center gap-2 mb-3 md:mb-6 text-xs md:text-sm text-gray-400">
           <button 
             @click="goBackToDetail"
             class="flex items-center gap-2 hover:text-amber-400 transition-colors group"
@@ -26,16 +26,16 @@
             <span>Quay lại thông tin phim</span>
           </button>
           <span class="text-gray-600">/</span>
-          <span class="text-gray-200 truncate max-w-[200px] md:max-w-md">{{ movie?.name }}</span>
+          <span class="text-gray-200 truncate max-w-[120px] md:max-w-md">{{ movie?.name }}</span>
           <span class="text-gray-600">/</span>
           <span class="text-amber-500 font-medium">Tập {{ currentEpisode + 1 }}</span>
         </div>
 
         <!-- Player Container -->
-        <div class="grid lg:grid-cols-4 gap-6 lg:gap-8">
+        <div class="grid lg:grid-cols-4 gap-4 lg:gap-8">
           <!-- Main Player Area (3 cols) -->
           <div class="lg:col-span-3">
-            <div class="relative aspect-video bg-black rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.15)] border border-amber-500/10 group">
+            <div class="player-container relative aspect-video bg-black rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.15)] border border-amber-500/10 group">
               <!-- Ambient Light Effect -->
               <div class="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-orange-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
               
@@ -79,7 +79,7 @@
             </div>
 
             <!-- Player Controls / Info -->
-            <div class="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="player-info mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h1 class="text-2xl md:text-3xl font-bold text-white mb-2 flex items-center gap-3">
                   {{ movie?.name }}
@@ -446,5 +446,54 @@ watch(() => route.params.slug, async (newSlug) => {
 
 .delay-100 {
   animation-delay: 0.1s;
+}
+
+/* Landscape mobile: fullscreen player */
+@media (orientation: landscape) and (max-height: 500px) {
+  .player-section {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+  }
+
+  .player-section .breadcrumb-bar,
+  .player-section .player-info {
+    display: none !important;
+  }
+
+  .player-section > .absolute {
+    display: none;
+  }
+
+  .player-section .max-w-\[1800px\] {
+    max-width: 100% !important;
+    padding: 0 !important;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .player-section .grid {
+    display: block !important;
+    height: 100%;
+  }
+
+  .player-section .lg\:col-span-3 {
+    height: 100%;
+  }
+
+  .player-section .lg\:col-span-1 {
+    display: none !important;
+  }
+
+  .player-container {
+    aspect-ratio: unset !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
 }
 </style>
