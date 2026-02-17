@@ -35,7 +35,9 @@
         <div class="grid lg:grid-cols-4 gap-4 lg:gap-8">
           <!-- Main Player Area (3 cols) -->
           <div class="lg:col-span-3">
-            <div class="player-container relative aspect-video bg-black rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.15)] border border-amber-500/10 group">
+            <div class="player-container relative aspect-video bg-black rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.15)] border border-amber-500/10 group"
+                 @click="handlePlayerTap"
+            >
               <!-- Ambient Light Effect -->
               <div class="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-orange-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
               
@@ -43,7 +45,7 @@
               <VideoPlayer
                 v-if="videoUrl && isM3U8"
                 :option="playerOptions"
-                class="w-full h-full z-20 relative rounded-xl overflow-hidden"
+                class="video-element w-full h-full z-20 relative rounded-xl overflow-hidden"
               />
               
               <!-- Fallback Iframe -->
@@ -51,7 +53,7 @@
                 v-else-if="videoUrl"
                 :src="videoUrl"
                 allowfullscreen
-                class="w-full h-full z-20 relative"
+                class="video-element w-full h-full z-20 relative"
                 frameborder="0"
                 ref="playerFrame"
               ></iframe>
@@ -75,6 +77,27 @@
                   <div class="absolute inset-3 border-4 border-transparent border-b-red-500 rounded-full animate-spin-reverse"></div>
                 </div>
                 <p class="text-red-500 font-bold animate-pulse tracking-wide">{{ toastMessage || 'Đang tải tập phim...' }}</p>
+              </div>
+
+              <!-- Mobile Landscape: Aspect Ratio Toolbar -->
+              <div 
+                v-if="isLandscapeMobile"
+                :class="['aspect-toolbar absolute top-3 right-3 z-50 flex items-center gap-1.5 bg-black/70 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/10 transition-opacity duration-300', showToolbar ? 'opacity-100' : 'opacity-0 pointer-events-none']"
+              >
+                <button 
+                  v-for="mode in aspectModes" 
+                  :key="mode.id"
+                  @click.stop="setAspectMode(mode.id)"
+                  :class="[
+                    'px-2 py-1 rounded-full text-[10px] font-bold transition-all whitespace-nowrap',
+                    currentAspectMode === mode.id 
+                      ? 'bg-amber-500 text-black shadow-lg' 
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  ]"
+                  :title="mode.label"
+                >
+                  {{ mode.label }}
+                </button>
               </div>
             </div>
 
@@ -254,7 +277,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref, watch, nextTick } from 'vue';
+import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useMovieStore } from '../stores/movieStore';
 import NavBar from '../components/NavBar.vue';
@@ -270,10 +293,95 @@ const toastMessage = ref('');
 const playerFrame = ref(null);
 const currentEpisode = ref(0);
 
+// --- Mobile Landscape / Aspect Ratio ---
+const isLandscapeMobile = ref(false);
+const showToolbar = ref(false);
+const currentAspectMode = ref('fit');
+let toolbarTimeout = null;
+
+const aspectModes = [
+  { id: 'fit', label: 'Vừa' },
+  { id: 'fill', label: 'Đầy' },
+  { id: '16:9', label: '16:9' },
+  { id: '21:9', label: '21:9' },
+  { id: '4:3', label: '4:3' },
+];
+
+function checkLandscape() {
+  const isLandscape = window.innerWidth > window.innerHeight;
+  const isMobile = window.innerHeight < 500 || (window.innerWidth < 1024 && 'ontouchstart' in window);
+  isLandscapeMobile.value = isLandscape && isMobile;
+  
+  if (isLandscapeMobile.value) {
+    showToolbar.value = true;
+    resetToolbarTimer();
+  } else {
+    showToolbar.value = false;
+  }
+}
+
+function resetToolbarTimer() {
+  clearTimeout(toolbarTimeout);
+  toolbarTimeout = setTimeout(() => {
+    showToolbar.value = false;
+  }, 4000);
+}
+
+function handlePlayerTap() {
+  if (isLandscapeMobile.value) {
+    showToolbar.value = !showToolbar.value;
+    if (showToolbar.value) resetToolbarTimer();
+  }
+}
+
+function setAspectMode(mode) {
+  currentAspectMode.value = mode;
+  resetToolbarTimer();
+  applyAspectMode(mode);
+}
+
+function applyAspectMode(mode) {
+  const container = document.querySelector('.player-container');
+  if (!container) return;
+  
+  // Reset
+  container.classList.remove('aspect-fit', 'aspect-fill', 'aspect-16-9', 'aspect-21-9', 'aspect-4-3');
+  
+  switch (mode) {
+    case 'fit':
+      container.classList.add('aspect-fit');
+      break;
+    case 'fill':
+      container.classList.add('aspect-fill');
+      break;
+    case '16:9':
+      container.classList.add('aspect-16-9');
+      break;
+    case '21:9':
+      container.classList.add('aspect-21-9');
+      break;
+    case '4:3':
+      container.classList.add('aspect-4-3');
+      break;
+  }
+}
+
 onMounted(async () => {
   const slug = route.params.slug; 
   await movieStore.getMovieDetail(slug);
   loadingPage.value = false;
+  
+  // Landscape detection
+  checkLandscape();
+  window.addEventListener('resize', checkLandscape);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(checkLandscape, 300);
+  });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkLandscape);
+  clearTimeout(toolbarTimeout);
 });
 
 const movie = computed(() => movieStore.movieDetail?.data?.item || null);
@@ -448,7 +556,7 @@ watch(() => route.params.slug, async (newSlug) => {
   animation-delay: 0.1s;
 }
 
-/* Landscape mobile: fullscreen player */
+/* ===== Landscape mobile: immersive fullscreen player ===== */
 @media (orientation: landscape) and (max-height: 500px) {
   .player-section {
     padding-top: 0 !important;
@@ -456,6 +564,10 @@ watch(() => route.params.slug, async (newSlug) => {
     position: fixed;
     inset: 0;
     z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000 !important;
   }
 
   .player-section .breadcrumb-bar,
@@ -469,31 +581,156 @@ watch(() => route.params.slug, async (newSlug) => {
 
   .player-section .max-w-\[1800px\] {
     max-width: 100% !important;
+    width: 100% !important;
     padding: 0 !important;
     height: 100vh;
     height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .player-section .grid {
-    display: block !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     height: 100%;
   }
 
   .player-section .lg\:col-span-3 {
+    width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .player-section .lg\:col-span-1 {
     display: none !important;
   }
 
+  /* Default: fit mode — video contained within screen */
   .player-container {
     aspect-ratio: unset !important;
+    width: 100vw !important;
     height: 100vh !important;
     height: 100dvh !important;
     border-radius: 0 !important;
     border: none !important;
     box-shadow: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Video element sizing modes */
+  .player-container .video-element,
+  .player-container .artplayer-app,
+  .player-container :deep(.artplayer-app),
+  .player-container :deep(.art-video-player),
+  .player-container iframe {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+
+  /* FIT: contain video within screen bounds */
+  .player-container.aspect-fit .video-element,
+  .player-container.aspect-fit .artplayer-app,
+  .player-container.aspect-fit :deep(.artplayer-app),
+  .player-container.aspect-fit :deep(.art-video-player),
+  .player-container.aspect-fit iframe,
+  .player-container:not(.aspect-fill):not(.aspect-16-9):not(.aspect-21-9):not(.aspect-4-3) .video-element,
+  .player-container:not(.aspect-fill):not(.aspect-16-9):not(.aspect-21-9):not(.aspect-4-3) .artplayer-app,
+  .player-container:not(.aspect-fill):not(.aspect-16-9):not(.aspect-21-9):not(.aspect-4-3) :deep(.artplayer-app),
+  .player-container:not(.aspect-fill):not(.aspect-16-9):not(.aspect-21-9):not(.aspect-4-3) :deep(.art-video-player),
+  .player-container:not(.aspect-fill):not(.aspect-16-9):not(.aspect-21-9):not(.aspect-4-3) iframe {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  /* Artplayer video element */
+  .player-container.aspect-fit :deep(video),
+  .player-container:not(.aspect-fill):not(.aspect-16-9):not(.aspect-21-9):not(.aspect-4-3) :deep(video) {
+    object-fit: contain !important;
+  }
+
+  /* FILL: stretch to cover entire screen */
+  .player-container.aspect-fill .video-element,
+  .player-container.aspect-fill .artplayer-app,
+  .player-container.aspect-fill :deep(.artplayer-app),
+  .player-container.aspect-fill :deep(.art-video-player),
+  .player-container.aspect-fill iframe {
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    object-fit: cover !important;
+  }
+  .player-container.aspect-fill :deep(video) {
+    object-fit: cover !important;
+  }
+
+  /* 16:9 */
+  .player-container.aspect-16-9 .video-element,
+  .player-container.aspect-16-9 .artplayer-app,
+  .player-container.aspect-16-9 :deep(.artplayer-app),
+  .player-container.aspect-16-9 :deep(.art-video-player),
+  .player-container.aspect-16-9 iframe {
+    width: calc(100dvh * 16 / 9) !important;
+    height: 100dvh !important;
+    max-width: 100vw;
+  }
+  .player-container.aspect-16-9 :deep(video) {
+    object-fit: fill !important;
+  }
+
+  /* 21:9 ultrawide */
+  .player-container.aspect-21-9 .video-element,
+  .player-container.aspect-21-9 .artplayer-app,
+  .player-container.aspect-21-9 :deep(.artplayer-app),
+  .player-container.aspect-21-9 :deep(.art-video-player),
+  .player-container.aspect-21-9 iframe {
+    width: 100vw !important;
+    height: calc(100vw * 9 / 21) !important;
+  }
+  .player-container.aspect-21-9 :deep(video) {
+    object-fit: fill !important;
+  }
+
+  /* 4:3 classic */
+  .player-container.aspect-4-3 .video-element,
+  .player-container.aspect-4-3 .artplayer-app,
+  .player-container.aspect-4-3 :deep(.artplayer-app),
+  .player-container.aspect-4-3 :deep(.art-video-player),
+  .player-container.aspect-4-3 iframe {
+    width: calc(100dvh * 4 / 3) !important;
+    height: 100dvh !important;
+    max-width: 100vw;
+  }
+  .player-container.aspect-4-3 :deep(video) {
+    object-fit: fill !important;
+  }
+}
+
+/* Aspect toolbar animation */
+.aspect-toolbar {
+  animation: toolbar-slide-in 0.3s ease-out;
+}
+
+@keyframes toolbar-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>

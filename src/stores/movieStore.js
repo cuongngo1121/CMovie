@@ -12,6 +12,7 @@ export const useMovieStore = defineStore('movie', {
         loading: false,
         searchLoading: false,
         movieDetail: null,
+        relatedMovies: {},
     }),
 
     getters: {
@@ -207,6 +208,24 @@ export const useMovieStore = defineStore('movie', {
                 console.error(`❌ Error loading detail for ${slug}`, e)
             } finally {
                 this.loading = false
+            }
+        },
+
+        /** Fetch movies by genre (for related/recommended) */
+        async getMoviesByGenre(genreSlug) {
+            if (this.relatedMovies[genreSlug]?.length) {
+                console.log(`📋 Using cached related movies for ${genreSlug}`)
+                return this.relatedMovies[genreSlug]
+            }
+            try {
+                const res = await axiosClient.get(`/v1/api/the-loai/${genreSlug}?page=1&limit=24`)
+                const items = res.data?.data?.items || []
+                this.relatedMovies[genreSlug] = items
+                console.log(`✅ Loaded ${items.length} related movies for genre ${genreSlug}`)
+                return items
+            } catch (e) {
+                console.error(`❌ Error loading genre ${genreSlug}`, e)
+                return []
             }
         },
 

@@ -152,10 +152,10 @@
 
        <!-- Related Movies -->
       <div class="max-w-[1600px] mx-auto px-4 lg:px-12 pb-16">
-        <NewMovie
+        <RelatedMovies
           v-if="movie"
-          title="🔥 Có thể bạn sẽ thích"
-          category="phim-moi"
+          :categories="movie.category || []"
+          :currentSlug="movie.slug"
         />
       </div>
 
@@ -175,7 +175,7 @@
  import { computed, onMounted, ref, watch } from 'vue';
  import { useMovieStore } from '../stores/movieStore';
  import ViewDetailBtn from '../components/ViewDetailBtn.vue';
- import NewMovie from '../components/NewMovie.vue';
+ import RelatedMovies from '../components/RelatedMovies.vue';
  const movieStore = useMovieStore();
 
 
