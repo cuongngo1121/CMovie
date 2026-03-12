@@ -288,12 +288,6 @@ function goToMovie(slug) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.05); 
-  transition: transform 10s ease;
-}
-
-.swiper-slide-active .background-image {
-  transform: scale(1);
 }
 
 /* Content Styles */
@@ -331,7 +325,6 @@ function goToMovie(slug) {
 
 /* Poster Styles */
 .poster-wrapper {
-  perspective: 1000px;
 }
 
 .poster-container {
@@ -341,12 +334,11 @@ function goToMovie(slug) {
   box-shadow: 
     0 20px 50px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.1);
-  transform: rotateY(5deg);
-  transition: transform 0.5s ease;
+  transition: transform 0.3s ease;
 }
 
 .poster-wrapper:hover .poster-container {
-  transform: rotateY(0deg) scale(1.02);
+  transform: scale(1.02);
 }
 
 .poster-image {
@@ -469,11 +461,10 @@ function goToMovie(slug) {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
   padding: 12px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
   width: 100%;
 }
 

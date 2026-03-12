@@ -4,7 +4,7 @@
     <div class="absolute inset-0 z-0">
       <div 
         v-if="featuredMovie"
-        class="absolute inset-0 bg-cover bg-center transition-all duration-700 transform scale-105 blur-sm opacity-20 md:opacity-40"
+        class="absolute inset-0 bg-cover bg-center opacity-15 md:opacity-30"
         :style="{ backgroundImage: `url(${getImageUrl(featuredMovie.poster_url || featuredMovie.thumb_url)})` }"
       ></div>
       <div class="absolute inset-0 bg-gradient-to-b from-black/95 via-black/85 to-black z-10"></div>
@@ -89,7 +89,7 @@
               <img 
                 :src="getImageUrl(featuredMovie.poster_url || featuredMovie.thumb_url)" 
                 :alt="featuredMovie.name"
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
               
@@ -131,14 +131,14 @@
             <div 
               v-for="(movie, index) in topList" 
               :key="movie._id"
-              class="flex gap-4 p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] backdrop-blur-md border border-white/5 hover:border-white/10 transition-all cursor-pointer group active:scale-[0.98]"
+              class="flex gap-4 p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-white/10 transition-colors cursor-pointer group"
               @click="goToMovie(movie.slug)"
             >
               <div class="relative w-24 aspect-[2/3] flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
                 <img 
                   :src="getImageUrl(movie.thumb_url)" 
                   :alt="movie.name"
-                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  class="w-full h-full object-cover"
                 />
                 <div class="absolute top-1 left-1 w-6 h-6 bg-black/60 backdrop-blur-sm rounded-md flex items-center justify-center text-white font-bold text-xs border border-white/10">
                   {{ index + 2 }}

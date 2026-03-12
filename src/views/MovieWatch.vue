@@ -4,12 +4,8 @@
 
     <!-- Immersive Player Section -->
     <div class="player-section relative w-full bg-black pt-16 pb-4 md:pt-24 md:pb-12 shadow-2xl z-10 overflow-hidden">
-      <!-- Dynamic Background Glow -->
-      <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute -top-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[80%] bg-amber-600/10 rounded-full blur-[120px] opacity-40 animate-pulse-slow"></div>
-        <div class="absolute top-[20%] left-[10%] w-[40%] h-[40%] bg-yellow-600/5 rounded-full blur-[100px] opacity-30 animate-float"></div>
-        <div class="absolute top-[20%] right-[10%] w-[40%] h-[40%] bg-orange-600/5 rounded-full blur-[100px] opacity-30 animate-float-delayed"></div>
-      </div>
+      <!-- Cinematic Background Effect (Optimized for Edge Performance) -->
+      <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/15 via-black to-black"></div>
 
       <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <!-- Breadcrumb / Back Navigation -->
@@ -112,13 +108,13 @@
               </div>
               
               <div class="flex items-center gap-3">
-                <button class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-amber-500/30 rounded-lg transition-all duration-300 text-sm font-medium group">
+                <button @click="handleShare" class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-amber-500/30 rounded-lg transition-all duration-300 text-sm font-medium group active:scale-95">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400 group-hover:text-amber-400 transition-colors">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                   </svg>
                   <span class="group-hover:text-white transition-colors">Chia sẻ</span>
                 </button>
-                <button class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 rounded-lg transition-all duration-300 text-sm font-bold text-black shadow-lg shadow-amber-600/20 hover:shadow-amber-500/40 hover:-translate-y-0.5">
+                <button @click="handleAddToWatchlist" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 rounded-lg transition-all duration-300 text-sm font-bold text-black shadow-lg shadow-amber-600/20 hover:shadow-amber-500/40 hover:-translate-y-0.5 active:scale-95">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                   </svg>
@@ -142,8 +138,8 @@
               </div>
 
               <!-- Episode Grid -->
-              <div class="flex-1 overflow-y-auto p-2 md:p-3 custom-scrollbar">
-                <div class="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-3 gap-1.5 md:gap-2">
+              <div class="flex-1 overflow-y-auto p-2 md:p-3 custom-scrollbar relative">
+                <div v-if="hasEpisodes" class="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-3 gap-1.5 md:gap-2">
                   <button
                     v-for="(ep, index) in movie?.episodes?.[0]?.server_data"
                     :key="index"
@@ -159,6 +155,14 @@
                     <!-- Shine effect for active -->
                     <div v-if="currentEpisode === index" class="absolute inset-0 bg-gradient-to-tr from-white/40 to-transparent opacity-50"></div>
                   </button>
+                </div>
+                <!-- Empty State: No Episodes -->
+                <div v-else class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                  <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-3">
+                    <span class="text-3xl">🍿</span>
+                  </div>
+                  <p class="text-amber-500 font-bold mb-1">Tạm thời chưa có tập!</p>
+                  <p class="text-xs text-gray-400">Tranh thủ coi tạm trailer hoặc đọc nội dung đỡ ghiền nha bạn êi.</p>
                 </div>
               </div>
             </div>
@@ -219,11 +223,10 @@
               <!-- Empty State -->
               <div class="text-center py-12 border-t border-white/5">
                 <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-600">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
-                  </svg>
+                  <span class="text-3xl">🫥</span>
                 </div>
-                <p class="text-gray-500 font-medium">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+                <p class="text-gray-400 font-bold mb-1">Chưa có ai dọn dẹp phần bình luận cả!</p>
+                <p class="text-xs text-gray-500">Mạnh dạn bóc tem làm người đầu tiên đi bạn ơi ✍️</p>
               </div>
             </div>
           </section>
@@ -277,12 +280,13 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue';
+import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useMovieStore } from '../stores/movieStore';
 import NavBar from '../components/NavBar.vue';
 import VideoPlayer from '../components/VideoPlayer.vue';
 
+const toast = inject('toast');
 const route = useRoute();
 const router = useRouter();
 const movieStore = useMovieStore();
@@ -426,11 +430,15 @@ const playerOptions = computed(() => ({
   autoPlayback: true,
   airplay: true,
   theme: '#F59E0B',
-  lang: 'vi',
-  icons: {
-    loading: '<img src="/loading.svg" width="50">'
-  }
+  lang: 'vi'
 }));
+
+const hasEpisodes = computed(() => {
+  const data = movie.value?.episodes?.[0]?.server_data;
+  if (!data || data.length === 0) return false;
+  if (data.length === 1 && !data[0].link_m3u8 && !data[0].link_embed) return false;
+  return true;
+});
 
 function goBackToDetail() {
   if (movie.value?.slug) {
@@ -438,6 +446,30 @@ function goBackToDetail() {
   } else {
     router.push('/');
   }
+}
+
+function handleShare() {
+  if (navigator.share) {
+    navigator.share({
+      title: movie.value?.name,
+      url: window.location.href
+    }).catch(console.error);
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    toast?.add({
+      type: 'success',
+      title: 'Đã copy link!',
+      message: 'Link phim đã được lưu vào bộ nhớ tạm.'
+    });
+  }
+}
+
+function handleAddToWatchlist() {
+  toast?.add({
+    type: 'success',
+    title: 'Tuyệt vời!',
+    message: `Đã thêm thư viện theo dõi.`
+  });
 }
 
 async function handleClick(index) {

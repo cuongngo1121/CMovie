@@ -62,7 +62,7 @@
 
               <!-- Description (Reduced on Mobile) -->
               <p class="text-gray-300 text-xs md:text-xl line-clamp-2 md:line-clamp-3 max-w-xl md:max-w-2xl leading-relaxed drop-shadow-lg opacity-0 animate-slide-up" style="animation-delay: 0.8s;">
-                 {{ movie.content || 'Một siêu phẩm điện ảnh không thể bỏ lỡ. Khám phá ngay thế giới phim đặc sắc với chất lượng hình ảnh tuyệt đỉnh...' }}
+                 {{ movie.content ? movie.content.replace(/<[^>]+>/g, '') : 'Một siêu phẩm điện ảnh không thể bỏ lỡ. Khám phá ngay thế giới phim đặc sắc với chất lượng hình ảnh tuyệt đỉnh...' }}
               </p>
 
               <!-- Buttons -->

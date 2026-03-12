@@ -1,39 +1,48 @@
 <template>
-  <div class="search-wrapper">
-    <button
-      v-if="!isSearchOpen"
-      @click="openSearch"
-      class="search-toggle-btn"
-      aria-label="Search"
+  <div class="search-wrapper" ref="wrapperRef">
+    <!-- Search container — always rendered, width animates -->
+    <div
+      :class="['search-container', { 'is-open': isSearchOpen }]"
+      @click="!isSearchOpen && openSearch()"
     >
-      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-      </svg>
-    </button>
-
-    <div v-else class="search-box">
-      <input
-        ref="searchInput"
-        v-model="searchQuery"
-        @input="handleInput"
-        @keydown.enter="goToSearchPage"
-        @blur="handleBlur"
-        type="text"
-        :placeholder="placeholder"
-        class="search-input-field"
-      />
-      <button @click="goToSearchPage" class="search-btn mr-1 text-gray-400 hover:text-white transition-colors" aria-label="Search">
+      <!-- Search icon (always visible) -->
+      <button
+        class="search-icon-btn"
+        @click.stop="isSearchOpen ? goToSearchPage() : openSearch()"
+        aria-label="Search"
+      >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
       </button>
-      <button v-if="searchQuery" @click="closeSearch" class="close-btn" aria-label="Close">
-        <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+      <!-- Input (visible when open) -->
+      <input
+        v-show="isSearchOpen"
+        ref="searchInput"
+        v-model="searchQuery"
+        @input="handleInput"
+        @keydown.enter="goToSearchPage"
+        @keydown.escape="closeSearch"
+        type="text"
+        :placeholder="placeholder"
+        class="search-input-field"
+      />
+
+      <!-- Close button -->
+      <button
+        v-show="isSearchOpen && searchQuery"
+        @click.stop="clearQuery"
+        class="close-btn"
+        aria-label="Clear"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
     </div>
 
+    <!-- Dropdown Results -->
     <transition name="dropdown-fade">
       <div
         v-if="isSearchOpen && showDropdown"
@@ -69,7 +78,7 @@
 
           <button @click="goToSearchPage" class="view-all-button">
             <span>Xem tất cả kết quả</span>
-            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
           </button>
@@ -85,6 +94,7 @@
       </div>
     </transition>
 
+    <!-- Backdrop -->
     <transition name="fade">
       <div
         v-if="isSearchOpen && showDropdown"
@@ -96,7 +106,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMovieStore } from '../stores/movieStore'
 
@@ -110,6 +120,7 @@ const props = defineProps({
   }
 })
 
+const wrapperRef = ref(null)
 const isSearchOpen = ref(false)
 const searchQuery = ref('')
 const searchResults = ref([])
@@ -135,13 +146,28 @@ function closeSearch() {
   showDropdown.value = false
 }
 
-function handleBlur() {
-  setTimeout(() => {
-    if (!showDropdown.value || searchResults.value.length === 0) {
-      closeSearch()
-    }
-  }, 200)
+function clearQuery() {
+  searchQuery.value = ''
+  searchResults.value = []
+  showDropdown.value = false
+  searchInput.value?.focus()
 }
+
+// Close on click outside
+function handleClickOutside(e) {
+  if (wrapperRef.value && !wrapperRef.value.contains(e.target) && isSearchOpen.value && !showDropdown.value) {
+    closeSearch()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  clearTimeout(searchTimeout)
+})
 
 async function handleInput() {
   clearTimeout(searchTimeout)
@@ -200,63 +226,83 @@ function handleImageError(e) {
   z-index: 100;
 }
 
-.search-toggle-btn {
+/* Container that smoothly animates width */
+.search-container {
+  display: flex;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #1A1F26;
+  border: 1px solid transparent;
+  overflow: hidden;
+  transition: width 0.3s ease, border-color 0.3s ease, background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.search-container:hover {
+  background-color: rgba(245, 158, 11, 0.15);
+}
+
+.search-container.is-open {
+  width: 300px;
+  border-color: #374151;
+  cursor: default;
+  background-color: #1A1F26;
+}
+
+.search-container.is-open:hover {
+  background-color: #1A1F26;
+}
+
+.search-icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 40px;
   width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #1A1F26;
-  color: #9CA3AF;
+  height: 38px;
+  flex-shrink: 0;
+  background: none;
   border: none;
+  color: #9CA3AF;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
-.search-toggle-btn:hover {
-  background-color: #F59E0B;
-  color: #0F1419;
-}
-
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #1A1F26;
-  border: 1px solid #374151;
-  border-radius: 20px;
-  padding: 8px 16px;
-  width: 300px;
-  transition: all 0.3s ease;
-  z-index: 101;
+.search-icon-btn:hover {
+  color: #F59E0B;
 }
 
 .search-input-field {
   flex: 1;
+  min-width: 0;
   background: transparent;
   border: none;
   outline: none;
   color: #F9FAFB;
   font-size: 14px;
+  padding-right: 8px;
 }
 
 .search-input-field::placeholder {
-  color: #9CA3AF;
+  color: #6B7280;
 }
 
 .close-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
+  margin-right: 6px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: transparent;
   border: none;
   color: #9CA3AF;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .close-btn:hover {
@@ -264,16 +310,7 @@ function handleImageError(e) {
   color: #F9FAFB;
 }
 
-.icon {
-  width: 20px;
-  height: 20px;
-}
-
-.icon-sm {
-  width: 16px;
-  height: 16px;
-}
-
+/* Dropdown */
 .results-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -326,7 +363,7 @@ function handleImageError(e) {
   padding: 12px;
   border-bottom: 1px solid #374151;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 
 .result-item:hover {
@@ -385,7 +422,7 @@ function handleImageError(e) {
   border: none;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .view-all-button:hover {
@@ -420,23 +457,24 @@ function handleImageError(e) {
   font-size: 13px;
 }
 
+/* Backdrop — no blur for performance */
 .backdrop-overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
   z-index: 99;
 }
 
+/* Transitions */
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .dropdown-fade-enter-from,
 .dropdown-fade-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
 
 .fade-enter-active,
@@ -449,28 +487,25 @@ function handleImageError(e) {
   opacity: 0;
 }
 
+/* Scrollbar */
 .results-dropdown::-webkit-scrollbar {
   width: 6px;
 }
-
 .results-dropdown::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .results-dropdown::-webkit-scrollbar-thumb {
   background: #374151;
   border-radius: 3px;
 }
-
 .results-dropdown::-webkit-scrollbar-thumb:hover {
   background: #F59E0B;
 }
 
+/* Mobile */
 @media (max-width: 768px) {
-  .search-box {
-    /* Remove fixed positioning to allow embedding in flow */
+  .search-container.is-open {
     width: 100%;
-    max-width: 100%;
   }
 
   .results-dropdown {

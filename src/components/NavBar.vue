@@ -15,12 +15,12 @@
         </router-link>
 
         <!-- Desktop Navigation -->
-        <div class="hidden lg:flex items-center gap-1">
+        <div class="hidden lg:flex items-center gap-2">
           <router-link
             v-for="item in mainMenuItems"
             :key="item.link"
             :to="item.link"
-            class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+            class="px-3 py-1.5 rounded-full text-[13px] font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-300 whitespace-nowrap"
             active-class="text-white bg-white/10"
           >
             {{ item.name }}
@@ -32,21 +32,21 @@
             
             <!-- Thể Loại -->
             <div class="relative group">
-              <button class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <button class="flex items-center gap-1 px-3 py-1.5 rounded-full text-[13px] font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-300 whitespace-nowrap">
                 <span>Thể Loại</span>
-                <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               
-              <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0">
-                <div class="w-96 p-4 bg-[#111] border border-white/10 rounded-xl shadow-2xl grid grid-cols-3 gap-2">
+              <div class="absolute top-full left-0 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0">
+                <div class="w-[400px] p-4 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl grid grid-cols-3 gap-1.5">
                   <router-link
                     v-for="genre in genres"
                     :key="genre.slug"
                     :to="genre.link"
-                    class="px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-colors text-center"
-                    active-class="text-red-500 bg-red-500/10"
+                    class="px-3 py-2 rounded-xl text-[13px] text-gray-400 hover:text-white hover:bg-white/10 transition-all text-center"
+                    active-class="text-white bg-white/10 font-medium"
                   >
                     {{ genre.name }}
                   </router-link>
@@ -56,21 +56,21 @@
 
             <!-- Quốc Gia -->
             <div class="relative group">
-              <button class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <button class="flex items-center gap-1 px-3 py-1.5 rounded-full text-[13px] font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-300 whitespace-nowrap">
                 <span>Quốc Gia</span>
-                <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               
-              <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0">
-                <div class="w-48 p-4 bg-[#111] border border-white/10 rounded-xl shadow-2xl flex flex-col gap-1">
+              <div class="absolute top-full left-0 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0">
+                <div class="w-48 p-3 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl flex flex-col gap-1">
                   <router-link
                     v-for="country in countries"
                     :key="country.slug"
                     :to="country.link"
-                    class="px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-                    active-class="text-red-500 bg-red-500/10"
+                    class="px-4 py-2.5 rounded-xl text-[13px] text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                    active-class="text-white bg-white/10 font-medium"
                   >
                     {{ country.name }}
                   </router-link>
@@ -83,17 +83,16 @@
         <!-- Spacer -->
         <div class="flex-1"></div>
 
-        <!-- Right Side: Search & Theme Toggle -->
-        <div class="hidden lg:flex items-center gap-4">
+        <div class="hidden lg:flex items-center gap-3 min-w-[340px] justify-end">
           <SearchBox />
           <button 
             @click="toggleTheme" 
-            class="w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center text-gray-400 hover:text-yellow-400 transition-colors"
+            class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
           >
-            <svg v-if="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg v-if="!isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>

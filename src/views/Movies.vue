@@ -36,14 +36,12 @@
         </div>
 
         <!-- Empty State -->
-        <div v-else class="text-center py-20">
-          <div class="w-24 h-24 mx-auto mb-6 bg-bg-elevated rounded-full flex items-center justify-center">
-            <svg class="w-12 h-12 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h4a1 1 0 011 1v1a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1h4zM3 8v11a2 2 0 002 2h14a2 2 0 002-2V8H3z"/>
-            </svg>
+        <div v-else class="text-center py-20 animate-fade-in-up">
+          <div class="w-24 h-24 mx-auto mb-4 bg-bg-elevated rounded-full flex items-center justify-center">
+            <span class="text-5xl">🕵️‍♂️</span>
           </div>
-          <h3 class="text-xl font-semibold text-text-secondary mb-2">Không tìm thấy phim</h3>
-          <p class="text-text-muted">Thử thay đổi bộ lọc để xem thêm phim</p>
+          <h3 class="text-xl md:text-2xl font-bold text-primary mb-2">Ối dồi ôi, tìm mỏi con mắt!</h3>
+          <p class="text-text-muted">Không có phim nào lọt qua được bộ lọc này cả. Thử nới lỏng chút xem sao bro ơi 🎬</p>
         </div>
 
         <!-- Pagination -->

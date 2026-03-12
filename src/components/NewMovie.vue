@@ -51,14 +51,22 @@
             :autoplay="{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }"
             :breakpoints="{
               768: { slidesPerView: 4, spaceBetween: 12 },
-              1024: { slidesPerView: 5, spaceBetween: 16 },
-              1280: { slidesPerView: 6, spaceBetween: 20 }
+              1024: { 
+                slidesPerView: 5, 
+                spaceBetween: 16,
+                grid: { rows: 2, fill: 'row' } 
+              },
+              1280: { 
+                slidesPerView: 6, 
+                spaceBetween: 20,
+                grid: { rows: 2, fill: 'row' } 
+              }
             }"
             :navigation="{ nextEl: `.nm-next-${componentId}`, prevEl: `.nm-prev-${componentId}` }"
             :pagination="false"
             class="overflow-visible"
           >
-            <swiper-slide v-for="movie in movies" :key="movie._id || movie.slug">
+            <swiper-slide v-for="movie in movies" :key="movie._id || movie.slug" class="h-auto pb-4">
               <MovieCard :movie="movie" @click="goToMovieDetails(movie)" />
             </swiper-slide>
           </swiper>
@@ -88,10 +96,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMovieStore } from '../stores/movieStore'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Autoplay, Navigation } from 'swiper/modules'
+import { Autoplay, Navigation, Grid } from 'swiper/modules'
 import MovieCard from './MovieCard.vue'
 import 'swiper/css'
 import 'swiper/css/navigation'
+import 'swiper/css/grid'
 
 const props = defineProps({
   title: { type: String, default: 'Phim Mới' },
@@ -100,7 +109,7 @@ const props = defineProps({
 
 const movieStore = useMovieStore()
 const router = useRouter()
-const modules = [Autoplay, Navigation]
+const modules = [Autoplay, Navigation, Grid]
 const loading = ref(true)
 const componentId = ref(Math.random().toString(36).substr(2, 9))
 

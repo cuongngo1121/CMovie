@@ -1,46 +1,75 @@
 <template>
-  <div class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black overflow-hidden">
-    <!-- Background Effects -->
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/20 via-black to-black opacity-0 animate-fade-in-bg"></div>
+  <div class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#050505] overflow-hidden">
+    <!-- Cinematic Lighting / Ambient Glow (Performance Optimized) -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.15)_0%,transparent_60%)]">
+      <!-- Vignette -->
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]"></div>
+    </div>
+    
+    <!-- Top & Bottom Cinematic Bars (Letterbox) -->
+    <div class="absolute inset-x-0 top-0 h-10 md:h-20 bg-black transform origin-top animate-letterbox-top z-20 shadow-[0_10px_30px_rgba(0,0,0,0.8)]"></div>
+    <div class="absolute inset-x-0 bottom-0 h-10 md:h-20 bg-black transform origin-bottom animate-letterbox-bottom z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.8)]"></div>
 
-    <div class="relative z-10 flex flex-col items-center">
-      <!-- Logo Icon -->
-      <div class="mb-4 opacity-0 animate-reveal-icon">
-        <div class="w-20 h-20 border-4 border-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)]">
-          <span class="text-4xl font-black text-white">O</span>
+    <div class="relative z-10 flex flex-col items-center justify-center w-full px-4">
+      <!-- 3D Cinematic Abstract Logo Assembly -->
+      <div class="relative w-28 h-28 md:w-40 md:h-40 mb-8 md:mb-12 group">
+        <!-- Glowing Core -->
+        <div class="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(220,38,38,0.4)_0%,transparent_70%)] animate-glow-pulse"></div>
+        
+        <!-- Rotating Cinematic Lens Rings -->
+        <svg class="absolute inset-0 w-full h-full text-white/5 animate-spin-slow-reverse" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 6" />
+        </svg>
+        <svg class="absolute inset-0 w-full h-full text-red-500/30 animate-spin-slow" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="20 40 10 30" stroke-linecap="round" />
+        </svg>
+        <!-- Drawing Ring -->
+        <svg class="absolute inset-0 w-full h-full text-red-600" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="214" stroke-dashoffset="214" class="animate-draw-circle" stroke-linecap="round" />
+        </svg>
+
+        <!-- Center Play Icon Assembly -->
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="relative w-10 h-10 md:w-16 md:h-16 flex items-center justify-center translate-x-[2px] md:translate-x-1 animate-pop-in">
+            <svg class="w-full h-full text-red-600 filter drop-shadow-[0_0_12px_rgba(220,38,38,0.9)]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7 4v16l13-8z" />
+            </svg>
+          </div>
         </div>
       </div>
 
-      <!-- Main Text -->
-      <h1 class="text-4xl md:text-6xl font-black text-white tracking-[0.3em] uppercase overflow-hidden">
-        <span class="inline-block animate-reveal-text-up opacity-0" style="animation-delay: 0.5s;">P</span>
-        <span class="inline-block animate-reveal-text-up opacity-0" style="animation-delay: 0.6s;">H</span>
-        <span class="inline-block animate-reveal-text-up opacity-0" style="animation-delay: 0.7s;">I</span>
-        <span class="inline-block animate-reveal-text-up opacity-0" style="animation-delay: 0.8s;">M</span>
-        <span class="inline-block w-4"></span>
-        <span class="inline-block animate-reveal-text-up opacity-0" style="animation-delay: 0.9s;">C</span>
-        <span class="inline-block animate-reveal-text-up opacity-0" style="animation-delay: 1.0s;">H</span>
-        <span class="inline-block animate-reveal-text-up opacity-0" style="animation-delay: 1.1s;">Ù</span>
-        <span class="inline-block animate-reveal-text-up opacity-0" style="animation-delay: 1.2s;">A</span>
-      </h1>
+      <!-- Main Typography Sequence -->
+      <div class="relative flex flex-col items-center">
+        <!-- Premium Text Reveal -->
+        <div class="overflow-hidden pb-4 md:pb-6 relative w-full flex justify-center">
+          <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-100 via-white to-gray-400 uppercase drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] animate-scale-down-text whitespace-nowrap">
+            <span class="inline-block animate-tracking-in pr-2">PHIM CHÙA</span>
+          </h1>
+          <!-- Light Sweep Over Text -->
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-50 -translate-x-full animate-shimmer skew-x-12 mix-blend-overlay"></div>
+        </div>
+      </div>
 
-      <!-- Slogan / Subtext -->
-      <p class="mt-4 text-gray-500 text-sm tracking-widest uppercase opacity-0 animate-fade-in-up" style="animation-delay: 1.5s;">
-        Xem phim không quảng cáo
+      <!-- Slogan / Subtitle with elegant fade -->
+      <p class="mt-2 text-gray-400 text-[10px] sm:text-xs md:text-sm tracking-[0.4em] md:tracking-[0.6em] uppercase font-light opacity-0 animate-fade-in-up-delay text-center">
+        Trải nghiệm <span class="text-red-500 font-bold drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]">điện ảnh</span> đỉnh cao
       </p>
+
+      <!-- Minimalist Progress Bar -->
+      <div class="mt-10 md:mt-16 w-40 md:w-64 h-[2px] md:h-[3px] bg-white/5 rounded-full overflow-hidden opacity-0 animate-fade-in-delay relative shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+        <div class="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-red-800 via-red-500 to-red-400 -translate-x-full animate-progress-bar shadow-[0_0_10px_rgba(220,38,38,0.8)]"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
 
 const emit = defineEmits(['finish'])
-const router = useRouter()
 
 let timer = null
-// Total duration: 1.2s (text) + 1s (hold) + 1s (extra)
+// Animation sequence is perfectly timed for 3.5 seconds
 const SPLASH_DURATION = 3500 
 
 onMounted(() => {
@@ -58,39 +87,93 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@keyframes reveal-icon {
-  0% { transform: scale(0.5) rotate(-90deg); opacity: 0; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+/* Keyframes */
+@keyframes letterbox-top {
+  0% { transform: scaleY(0); }
+  20% { transform: scaleY(1); }
+  85% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
 }
 
-@keyframes reveal-text-up {
-  0% { transform: translateY(100%); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+@keyframes letterbox-bottom {
+  0% { transform: scaleY(0); }
+  20% { transform: scaleY(1); }
+  85% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
 }
 
-@keyframes fade-in-up {
-  0% { transform: translateY(20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 0.6; transform: scale(1.1); }
 }
 
-@keyframes fade-in-bg {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
 }
 
-.animate-reveal-icon {
-  animation: reveal-icon 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes spin-slow-reverse {
+  to { transform: rotate(-360deg); }
 }
 
-.animate-reveal-text-up {
-  animation: reveal-text-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes draw-circle {
+  0% { stroke-dashoffset: 214; transform: rotate(-90deg); transform-origin: center; filter: blur(4px); }
+  40% { stroke-dashoffset: 0; transform: rotate(90deg); filter: blur(0); }
+  100% { stroke-dashoffset: 0; transform: rotate(270deg); }
 }
 
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
+@keyframes pop-in {
+  0% { transform: scale(0) translateX(0); opacity: 0; filter: blur(10px); }
+  30% { transform: scale(0) translateX(0); opacity: 0; }
+  50% { transform: scale(1.2) translateX(4px); opacity: 1; filter: blur(0); }
+  60% { transform: scale(1) translateX(4px); }
+  100% { transform: scale(1) translateX(4px); opacity: 1; }
 }
 
-.animate-fade-in-bg {
-  animation: fade-in-bg 1s ease-out forwards;
+@keyframes tracking-in {
+  0% { letter-spacing: -0.5em; opacity: 0; filter: blur(12px); transform: translateZ(-100px); }
+  35% { letter-spacing: -0.5em; opacity: 0; }
+  65% { letter-spacing: 0.3em; opacity: 1; filter: blur(0); transform: translateZ(0); }
+  100% { letter-spacing: 0.3em; opacity: 1; }
 }
+
+@keyframes scale-down-text {
+  0%, 35% { transform: scale(1.5); }
+  65% { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0%, 50% { transform: translateX(-100%) skewX(12deg); }
+  80%, 100% { transform: translateX(200%) skewX(12deg); }
+}
+
+@keyframes fade-in-up-delay {
+  0%, 65% { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+  85%, 100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes fade-in-delay {
+  0%, 40% { opacity: 0; }
+  50%, 100% { opacity: 1; }
+}
+
+@keyframes progress-bar {
+  0%, 40% { transform: translateX(-100%); }
+  90%, 100% { transform: translateX(0); }
+}
+
+/* Animation Classes */
+.animate-letterbox-top { animation: letterbox-top 3.5s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+.animate-letterbox-bottom { animation: letterbox-bottom 3.5s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+.animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+.animate-spin-slow-reverse { animation: spin-slow-reverse 12s linear infinite; }
+.animate-draw-circle { animation: draw-circle 3.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.animate-pop-in { animation: pop-in 3.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.animate-tracking-in { animation: tracking-in 3.5s cubic-bezier(0.215, 0.61, 0.355, 1) forwards; }
+.animate-scale-down-text { animation: scale-down-text 3.5s cubic-bezier(0.215, 0.61, 0.355, 1) forwards; }
+.animate-shimmer { animation: shimmer 3.5s ease-in-out forwards; }
+.animate-fade-in-up-delay { animation: fade-in-up-delay 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in-delay { animation: fade-in-delay 3.5s ease-out forwards; }
+.animate-progress-bar { animation: progress-bar 3.5s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
 </style>

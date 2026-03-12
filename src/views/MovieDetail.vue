@@ -67,6 +67,24 @@
                 <span class="hidden md:inline">Xem Trailer</span>
                 <span class="md:hidden">Trailer</span>
               </button>
+
+              <div class="flex items-center gap-2 md:gap-3 ml-auto sm:ml-0">
+                <button 
+                  @click="handleShare"
+                  title="Chia sẻ phim"
+                  class="p-3 md:p-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white rounded-xl md:rounded-full transition-all flex items-center justify-center active:scale-95 group"
+                >
+                  <svg class="w-5 h-5 md:w-6 md:h-6 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"></path></svg>
+                </button>
+  
+                <button 
+                  @click="handleAddToWatchlist"
+                  title="Thêm vào danh sách chờ"
+                  class="p-3 md:p-4 bg-white/10 hover:bg-amber-600 backdrop-blur-md border border-white/20 hover:border-amber-500 text-white rounded-xl md:rounded-full transition-all flex items-center justify-center active:scale-95 group shadow-lg"
+                >
+                  <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -83,9 +101,7 @@
               <span class="w-1 h-8 bg-red-600 rounded-full"></span>
               Nội Dung Phim
             </h2>
-            <p class="text-gray-300 text-sm md:text-lg leading-relaxed text-justify">
-              {{ movie.content }}
-            </p>
+            <p class="text-gray-300 text-sm md:text-lg leading-relaxed text-justify" v-html="movie.content"></p>
           </section>
 
           <!-- Trailer -->
@@ -111,8 +127,10 @@
               <span class="w-1 h-8 bg-red-600 rounded-full"></span>
               Bình Luận
             </h2>
-            <div class="p-6 bg-[#1a1a1a] rounded-xl border border-white/5">
-              <p class="text-gray-500 italic text-center">Chức năng bình luận đang được bảo trì.</p>
+            <div class="p-8 bg-[#1a1a1a] rounded-xl border border-white/5 text-center flex flex-col items-center justify-center">
+              <span class="text-4xl mb-3">🐛</span>
+              <p class="text-gray-400 font-bold tracking-wide">Chức năng bình luận đang được bảo trì!</p>
+              <p class="text-xs text-gray-500 mt-1">Thợ code đang còng lưng fix bug, các dân chơi chờ chút nha...</p>
             </div>
           </section>
         </div>
@@ -172,12 +190,12 @@
 
 <script setup>
  import NavBar from '../components/NavBar.vue';
- import { computed, onMounted, ref, watch } from 'vue';
+ import { computed, onMounted, ref, watch, inject } from 'vue';
  import { useMovieStore } from '../stores/movieStore';
  import ViewDetailBtn from '../components/ViewDetailBtn.vue';
  import RelatedMovies from '../components/RelatedMovies.vue';
  const movieStore = useMovieStore();
-
+ const toast = inject('toast');
 
  import { useRoute, useRouter } from 'vue-router';
 
@@ -224,6 +242,30 @@ function goToMovieWatch(movie) {
     return;
   }
   router.push({ name: 'MovieWatch', params: { slug: movie.slug } });
+}
+
+function handleShare() {
+  if (navigator.share) {
+    navigator.share({
+      title: movie.value?.name,
+      url: window.location.href
+    }).catch(console.error);
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    toast?.add({
+      type: 'success',
+      title: 'Đã copy link!',
+      message: 'Link phim đã được lưu vào bộ nhớ tạm.'
+    });
+  }
+}
+
+function handleAddToWatchlist() {
+  toast?.add({
+    type: 'success',
+    title: 'Tuyệt vời!',
+    message: `Đã thêm thư viện theo dõi.`
+  });
 }
 
 function scrollToTrailer() {

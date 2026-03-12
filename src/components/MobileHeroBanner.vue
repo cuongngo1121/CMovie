@@ -57,6 +57,9 @@
           <p class="text-white/50 text-xs font-medium mb-3 line-clamp-1">
             {{ movie.origin_name }}
           </p>
+          <p class="text-white/70 text-xs mb-4 line-clamp-2">
+            {{ movie.content ? movie.content.replace(/<[^>]+>/g, '') : 'Khám phá ngay siêu phẩm điện ảnh này...' }}
+          </p>
 
           <!-- Buttons -->
           <div class="flex gap-3">

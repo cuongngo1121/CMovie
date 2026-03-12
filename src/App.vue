@@ -5,22 +5,33 @@
       <LoadingOverlay :is-loading="isLoading" />
       <router-view :key="$route.fullPath" />
       <BottomNav @open-menu="handleOpenMenu" />
+      <Toast ref="toastRef" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, provide } from 'vue'
 import { useMovieStore } from './stores/movieStore'
 import { useRouter } from 'vue-router'
 import BottomNav from './components/BottomNav.vue'
 import LoadingOverlay from './components/LoadingOverlay.vue'
 import WelcomeScreen from './components/WelcomeScreen.vue'
+import Toast from './components/Toast.vue'
 
 const isLoading = ref(false)
 const showWelcome = ref(true)
 const router = useRouter()
 const movieStore = useMovieStore()
+const toastRef = ref(null)
+
+provide('toast', {
+  add: (toast) => {
+    if (toastRef.value) {
+      toastRef.value.addToast(toast)
+    }
+  }
+})
 
 router.beforeEach((to, from, next) => {
   // Only show loading overlay if welcome screen is finished

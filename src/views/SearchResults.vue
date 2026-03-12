@@ -49,19 +49,17 @@
         </div>
 
         <!-- Empty State -->
-        <div v-else class="text-center py-20">
-          <div class="w-24 h-24 mx-auto mb-6 bg-bg-elevated rounded-full flex items-center justify-center">
-            <svg class="w-12 h-12 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
+        <div v-else class="text-center py-20 animate-fade-in-up">
+          <div class="w-24 h-24 mx-auto mb-4 bg-bg-elevated rounded-full flex items-center justify-center border border-white/5 shadow-lg">
+            <span class="text-5xl">🕵️‍♂️</span>
           </div>
-          <h3 class="text-xl font-semibold text-text-secondary mb-2">Không tìm thấy kết quả</h3>
-          <p class="text-text-muted mb-6">Không có phim nào khớp với từ khóa "{{ searchQuery }}"</p>
+          <h3 class="text-xl md:text-2xl font-bold text-primary mb-2">Tìm hoài không thấy!</h3>
+          <p class="text-text-muted mb-6">Chắc đạo diễn chưa kịp quay phim "<span class="text-secondary font-bold">{{ searchQuery }}</span>" rồi. Thử đổi từ khóa khác xem sao bạn ei 🎬</p>
           <button 
             @click="$router.push('/')"
-            class="px-6 py-3 bg-secondary text-primary-dark rounded-lg font-semibold hover:bg-secondary-light transition-colors"
+            class="px-6 py-3 bg-gradient-to-r from-secondary to-yellow-600 hover:from-yellow-400 hover:to-secondary text-primary-dark rounded-xl font-bold shadow-lg shadow-secondary/20 hover:shadow-secondary/40 transition-all hover:-translate-y-1 active:scale-95"
           >
-            Về trang chủ
+            Quay đầu là bờ
           </button>
         </div>
       </div>
