@@ -6,6 +6,7 @@ import Country from "../views/Country.vue";
 import Series from "../views/Series.vue";
 import MovieWatch from "../views/MovieWatch.vue";
 import Animation from "../views/Animation.vue";
+import Movies from "../views/Movies.vue";
 
 const routes = [
     {
@@ -30,7 +31,8 @@ const routes = [
     },
     {
         path: "/movies",
-        redirect: "/tim-kiem",
+        name: "Movies",
+        component: Movies,
     },
     {
         path: "/series",

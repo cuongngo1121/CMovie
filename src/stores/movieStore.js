@@ -303,6 +303,10 @@ export const useMovieStore = defineStore('movie', {
             return await this.getAllMoviesByCountry(country)
         },
 
+        async getRecentlyUpdated() {
+            return await this.getAllMoviesByCategory('phim-moi-cap-nhat', 'danh-sach')
+        },
+
         /** Category cache helpers */
         clearCategoryMovies(category) {
             if (this.moviesByCategory[category]) {
